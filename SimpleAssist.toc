@@ -1,0 +1,10 @@
+## Interface: 90002
+## Title: SimpleAssist
+## Notes: Replace the common /assist macro
+## Version: 4.00
+## Author: Schnoggo
+## Dependencies:
+## SavedVariables: SimpleAssistSavedVars
+localization.lua
+settings.lua
+SimpleAssist.lua

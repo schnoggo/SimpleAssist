@@ -1,0 +1,1005 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+
+<!-- InputBoxTemplate -->
+<EditBox name="SimpleAssistInputBoxTemplate"
+	inherits="InputBoxTemplate"
+	virtual="true"
+	hidden="true"
+	>
+		 <Size>
+		  <AbsDimension x="80" y="26"/>
+		</Size>
+		<Anchors>
+				<Anchor
+				point="TOPLEFT"
+				relativePoint="TOPLEFT"
+				relativeTo="SimpleAssistPrefsCustomChatHead"
+				>
+						<Offset>
+								<AbsDimension x="20" y="-20"/>
+						</Offset>
+				</Anchor>
+		</Anchors>
+</EditBox>
+
+<!-- text template -->
+<FontString name="SimpleAssistTT"
+	virtual="true"
+	inherits="GameFontNormal"
+	justifyV="TOP"
+	justifyH="LEFT"
+	nonspacewrap="false"
+	>
+	<Anchors>
+		<Anchor
+			point="LEFT"
+			relativePoint="TOPLEFT"
+			relativeTo="SimpleAssistPrefsChatHead"
+		>
+			<Offset>
+				<AbsDimension x="20" y="-22"/>
+			</Offset>
+		</Anchor>
+	</Anchors>
+	<Color r="1" g="1" b="1" a="1" />  <!-- White Color -->
+</FontString>
+
+
+<!-- Prefs page (tab) template -->
+<Frame name="SimpleAssistPrefsTemplate"
+	virtual="true"
+	hidden="true"
+	>
+	<Size><AbsDimension x="420" y="500" /></Size>
+	<Anchors>
+		<Anchor
+			point="TOPLEFT"
+			relativePoint="TOPLEFT"
+			relativeTo="InterfaceOptionsFramePanelContainer"
+		>
+		<Offset><AbsDimension x="20" y="-40"/></Offset>
+		</Anchor>
+	</Anchors>
+</Frame>
+
+
+
+<MessageFrame name="SimpleAssistAlertFrame"
+	insertMode="TOP"
+	parent="UIParent"
+	frameStrata="LOW"
+	toplevel="true"
+	>
+
+	<Size>
+		<AbsDimension x="520" y="60"/>
+	</Size>
+
+	<Anchors>
+		<Anchor point="CENTER">
+			<Offset>
+				<AbsDimension x="0" y="0" />
+			</Offset>
+		</Anchor>
+	</Anchors>
+
+	<FontString inherits="NumberFontNormalHuge" justifyH="CENTER" />
+</MessageFrame>
+
+<!-- start of content frame -->
+<frame name="SimpleAssistOptionsPanel"
+	inherits="SimpleAssistPrefsTemplate"
+	>
+	<Scripts>
+		<OnLoad>
+
+	</OnLoad>
+	</Scripts>
+	<Layers>
+		<Layer level="ARTWORK">
+			<!-- title -->
+			<FontString name="SimpleAssistPrefsChatHead"
+					inherits="GameFontNormal"
+					justifyV="TOP"
+					justifyH="LEFT"
+					nonspacewrap="false"
+					text="SASSTEXT_CHAT_HEAD"
+					>
+					<Size>
+						<AbsDimension x="440" y="80"/>
+					</Size>
+					<Anchors>
+						<Anchor
+							point="LEFT"
+							relativePoint="TOPLEFT"
+							relativeTo="SimpleAssistOptionsPanel"
+						>
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r=".2" g="1" b="1" a="1" />
+				</FontString>
+
+
+
+				<FontString
+					name="SimpleAssistPrefsTextEMOTE"
+					inherits="SimpleAssistTT"
+					text="SASSTEXT_CHAT_EMOTE"
+					>
+					<Size>
+						<AbsDimension x="200" y="40"/>
+					</Size>
+					<Anchors>
+						<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="SimpleAssistPrefsChatHead"
+						>
+							<Offset>
+								<AbsDimension x="60" y="-70"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="1" g="1" b="1" a="1" />  <!-- White Color -->
+				</FontString>
+
+			<FontString name="$parent_H1"
+				inherits="SimpleAssistTT"
+				text="SASSTEXT_TITLE"
+				>
+				<Anchors>
+					<Anchor
+						relativeTo="InterfaceOptionsFramePanelContainer"
+					>
+						<Offset>
+							<AbsDimension x="20" y="-22"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Color r=".2" g="1" b=".2" a="1" />
+			</FontString>
+
+			<FontString name="SimpleAssistPrefsTextSAY"
+				inherits="SimpleAssistTT"
+				text="SASSTEXT_CHAT_SAY"
+				>
+				<Size>
+					<AbsDimension x="200" y="40"/>
+				</Size>
+				<Anchors>
+					<Anchor
+					point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsChatHead"
+					>
+						<Offset>
+							<AbsDimension x="60" y="-100"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Color r="1" g="1" b="1" a="1" />  <!-- White Color -->
+			</FontString>
+
+			<FontString name="SimpleAssistPrefsTextYELL"
+				inherits="GameFontNormal"
+				justifyV="TOP"
+				justifyH="LEFT"
+				text="SASSTEXT_CHAT_YELL"
+				nonspacewrap="false"
+				>
+				<Size>
+					<AbsDimension x="200" y="40"/>
+				</Size>
+				<Anchors>
+					<Anchor>
+						<Offset>
+							<AbsDimension x="60" y="-130"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Color r="1" g="1" b="1" a="1" />  <!-- White Color -->
+			</FontString>
+
+			<FontString name="SimpleAssistPrefsTextRAID"
+				inherits="SimpleAssistTT"
+				text="SASSTEXT_CHAT_RAID"
+				>
+				<Size>
+					<AbsDimension x="200" y="40"/>
+				</Size>
+				<Anchors>
+					<Anchor>
+						<Offset>
+							<AbsDimension x="240" y="-70"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</FontString>
+
+				<FontString name="SimpleAssistPrefsTextPARTY"
+					inherits="SimpleAssistTT"
+					text="SASSTEXT_CHAT_PARTY"
+					>
+					<Size>
+						<AbsDimension x="200" y="40"/>
+					</Size>
+					<Anchors>
+						<Anchor>
+							<Offset>
+								<AbsDimension x="240" y="-100"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+
+
+				<FontString name="SimpleAssistPrefsTextRW"
+					inherits="SimpleAssistTT"
+					text="SASSTEXT_CHAT_RW"
+					>
+					<Size>
+						<AbsDimension x="200" y="40"/>
+					</Size>
+					<Anchors>
+						<Anchor>
+							<Offset>
+								<AbsDimension x="240" y="-130"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+
+			<FontString name="SimpleAssistPrefsCustomChatHead"
+				inherits="SimpleAssistTT"
+				text="SASSTEXT_CUSTOM_CALL_HEAD"
+				>
+				<Size>
+					<AbsDimension x="440" y="140"/>
+				</Size>
+				<Anchors>
+					<Anchor>
+						<Offset>
+							<AbsDimension x="0" y="-110"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Color r=".2" g="1" b="1" a="1" />
+			</FontString>
+
+			<FontString name="SimpleAssistPrefsCustomChatPlayer"
+				inherits="SimpleAssistTT"
+				text="SASSTEXT_CUSTOM_CALL_PLAYERNAME"
+				>
+					<Size>
+						<AbsDimension x="240" y="40"/>
+					</Size>
+					<Anchors>
+						<Anchor>
+							<Offset><AbsDimension x="88" y="-96"/></Offset>
+						</Anchor>
+					</Anchors>
+			</FontString>
+
+			<FontString name="SimpleAssistPrefsCustomChatTarget"
+				inherits="SimpleAssistTT"
+				text="SASSTEXT_CUSTOM_CALL_MOBNAME"
+				>
+				<Size>
+					<AbsDimension x="300" y="40"/>
+				</Size>
+				<Anchors>
+					<Anchor>
+						<Offset><AbsDimension x="168" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</FontString>
+
+
+			<CheckButton name="SimpleAssistPrefsEMOTE"
+				inherits="UICheckButtonTemplate"
+				id="01"
+				>
+				<Anchors>
+					<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="SimpleAssistPrefsTextEMOTE"
+						>
+						<Offset><AbsDimension x="-30" y="10"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+						<OnClick>SimpleAssist_Options_OnClick(self); </OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssistPrefsSAY"
+				inherits="UICheckButtonTemplate"
+				id="01"
+				>
+				<Anchors>
+					<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="SimpleAssistPrefsTextSAY"
+						>
+						<Offset><AbsDimension x="-30" y="10"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+						<OnClick>SimpleAssist_Options_OnClick(self); </OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssistPrefsYELL"
+				inherits="UICheckButtonTemplate"
+				id="01"
+				>
+				<Anchors>
+					<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="SimpleAssistPrefsTextYELL"
+						>
+						<Offset><AbsDimension x="-30" y="10"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+						<OnClick>SimpleAssist_Options_OnClick(self); </OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssistPrefsRAID"
+				inherits="UICheckButtonTemplate"
+				id="01"
+				>
+				<Anchors>
+					<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="SimpleAssistPrefsTextRAID"
+						>
+						<Offset><AbsDimension x="-30" y="10"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+						<OnClick>SimpleAssist_Options_OnClick(self); </OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssistPrefsPARTY"
+				inherits="UICheckButtonTemplate"
+				id="01"
+				>
+				<Anchors>
+					<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="SimpleAssistPrefsTextPARTY"
+						>
+						<Offset><AbsDimension x="-30" y="10"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+						<OnClick>SimpleAssist_Options_OnClick(self); </OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssistPrefsRW"
+				inherits="UICheckButtonTemplate"
+				id="01"
+				>
+				<Anchors>
+					<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="SimpleAssistPrefsTextRW"
+						>
+						<Offset><AbsDimension x="-30" y="10"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+						<OnClick>SimpleAssist_Options_OnClick(self); </OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<EditBox name="SimpleAssistChatText1"
+				inherits="SimpleAssistInputBoxTemplate"
+				>
+				<Anchors>
+				<Anchor
+							point="TOPLEFT"
+							relativePoint="TOPLEFT"
+							relativeTo="SimpleAssistPrefsCustomChatHead"
+							>
+									<Offset>
+											<AbsDimension x="0" y="-90"/>
+									</Offset>
+							</Anchor>
+				</Anchors>
+					<Scripts>
+						<OnTextChanged>SimpleAssist_GetPrefsText(); </OnTextChanged>
+					</Scripts>
+			</EditBox>
+
+			<EditBox name="SimpleAssistChatText2"
+				inherits="SimpleAssistInputBoxTemplate"
+				>
+				<Anchors>
+				<Anchor
+							point="TOPLEFT"
+							relativePoint="TOPLEFT"
+							relativeTo="SimpleAssistChatText1"
+							>
+									<Offset>
+											<AbsDimension x="170" y="0"/>
+									</Offset>
+							</Anchor>
+				</Anchors>
+					<Scripts>
+						<OnTextChanged>SimpleAssist_GetPrefsText(); </OnTextChanged>
+					</Scripts>
+			</EditBox>
+
+			<EditBox name="SimpleAssistChatText3"
+				inherits="SimpleAssistInputBoxTemplate"
+				>
+					<Scripts>
+						<OnTextChanged>SimpleAssist_GetPrefsText(); </OnTextChanged>
+					</Scripts>
+			</EditBox>
+
+
+			<CheckButton name="SimpleAssist_RB0"
+				inherits="SendMailRadioButtonTemplate"
+				>
+				<Anchors>
+					<Anchor point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsTextRaid0"
+					>
+						<Offset><AbsDimension  x="-20" y="2"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+				<OnLoad>
+				</OnLoad>
+				<OnClick>SimpleAssist_Radio_OnClick(0);
+				</OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssist_RB1"
+				inherits="SendMailRadioButtonTemplate"
+				>
+				<Anchors>
+					<Anchor point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsTextRaid1"
+					>
+						<Offset><AbsDimension  x="-20" y="2"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+				<OnLoad>
+				</OnLoad>
+				<OnClick>SimpleAssist_Radio_OnClick(1);
+				</OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssist_RB2"
+				inherits="SendMailRadioButtonTemplate"
+				>
+				<Anchors>
+					<Anchor point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsTextRaid2"
+					>
+						<Offset><AbsDimension  x="-20" y="2"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+				<OnLoad>
+				</OnLoad>
+				<OnClick>SimpleAssist_Radio_OnClick(2);
+				</OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssist_RB3"
+				inherits="SendMailRadioButtonTemplate"
+				>
+				<Anchors>
+					<Anchor point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsTextRaid3"
+					>
+						<Offset><AbsDimension  x="-20" y="2"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+				<OnLoad>
+				</OnLoad>
+				<OnClick>SimpleAssist_Radio_OnClick(3);
+				</OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssist_RB4"
+				inherits="SendMailRadioButtonTemplate"
+				>
+				<Anchors>
+					<Anchor point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsTextRaid4"
+					>
+						<Offset><AbsDimension  x="-20" y="2"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+				<OnLoad>
+				</OnLoad>
+				<OnClick>SimpleAssist_Radio_OnClick(4);
+				</OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssist_RB5"
+				inherits="SendMailRadioButtonTemplate"
+				>
+				<Anchors>
+					<Anchor point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsTextRaid5"
+					>
+						<Offset><AbsDimension  x="-20" y="2"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+				<OnLoad>
+				</OnLoad>
+				<OnClick>SimpleAssist_Radio_OnClick(5);
+				</OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssist_RB6"
+				inherits="SendMailRadioButtonTemplate"
+				>
+				<Anchors>
+					<Anchor point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsTextRaid6"
+					>
+						<Offset><AbsDimension  x="-20" y="2"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+				<OnLoad>
+				</OnLoad>
+				<OnClick>SimpleAssist_Radio_OnClick(6);
+				</OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssist_RB7"
+				inherits="SendMailRadioButtonTemplate"
+				>
+				<Anchors>
+					<Anchor point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsTextRaid7"
+					>
+						<Offset><AbsDimension  x="-20" y="2"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+				<OnLoad>
+				</OnLoad>
+				<OnClick>SimpleAssist_Radio_OnClick(7);
+				</OnClick>
+				</Scripts>
+			</CheckButton>
+
+			<CheckButton name="SimpleAssist_RB8"
+				inherits="SendMailRadioButtonTemplate"
+				>
+				<Anchors>
+					<Anchor point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsTextRaid8"
+					>
+						<Offset><AbsDimension  x="-20" y="2"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+				<OnLoad>
+				</OnLoad>
+				<OnClick>SimpleAssist_Radio_OnClick(8);
+				</OnClick>
+				</Scripts>
+			</CheckButton>
+
+
+
+		<!-- targets: -->
+
+		<FontString name="SimpleAssistPrefsRaidHead"
+			inherits="SimpleAssistTT"
+			text="SASSTEXT_RTARGET_HEAD"
+			>
+			<Size>
+				<AbsDimension x="440" y="140"/>
+			</Size>
+			<Anchors>
+				<Anchor>
+					<Offset>
+						<AbsDimension x="0" y="-250"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Color r=".2" g="1" b="1" a="1" />
+		</FontString>
+
+		<FontString name="SimpleAssistPrefsTextRaid0"
+			inherits="SimpleAssistTT"
+			text="SASSTEXT_RTARGET0"
+			>
+			<Size>
+				<AbsDimension x="200" y="40"/>
+			</Size>
+			<Anchors>
+				<Anchor>
+					<Offset><AbsDimension x="60" y="-100"/></Offset>
+				</Anchor>
+			</Anchors>
+		</FontString>
+
+		<FontString name="SimpleAssistPrefsTextRaid1"
+			inherits="SimpleAssistTT"
+			text="SASSTEXT_RTARGET1"
+			>
+			<Size>
+				<AbsDimension x="200" y="40"/>
+			</Size>
+			<Anchors>
+				<Anchor>
+					<Offset><AbsDimension x="0" y="-20"/></Offset>
+				</Anchor>
+			</Anchors>
+		</FontString>
+
+		<FontString name="SimpleAssistPrefsTextRaid2"
+			inherits="SimpleAssistTT"
+			text="SASSTEXT_RTARGET2"
+			>
+			<Size>
+				<AbsDimension x="200" y="40" />
+			</Size>
+			<Anchors>
+				<Anchor
+					point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsTextRaid1"
+					>
+					<Offset><AbsDimension x="0" y="-20"/></Offset>
+				</Anchor>
+			</Anchors>
+		</FontString>
+
+		<FontString name="SimpleAssistPrefsTextRaid3"
+			inherits="SimpleAssistTT"
+			text="SASSTEXT_RTARGET3"
+			>
+			<Size>
+				<AbsDimension x="200" y="40"/>
+			</Size>
+			<Anchors>
+				<Anchor
+				relativeTo="SimpleAssistPrefsTextRaid2"
+				>
+					<Offset><AbsDimension x="0" y="-20"/></Offset>
+				</Anchor>
+			</Anchors>
+		</FontString>
+
+		<FontString name="SimpleAssistPrefsTextRaid4"
+			inherits="SimpleAssistTT"
+			text="SASSTEXT_RTARGET4"
+			>
+			<Size>
+				<AbsDimension x="200" y="40"/>
+			</Size>
+			<Anchors>
+				<Anchor
+				relativeTo="SimpleAssistPrefsRaidHead"
+				>
+					<Offset><AbsDimension x="240" y="-100"/></Offset>
+				</Anchor>
+			</Anchors>
+		</FontString>
+
+		<FontString name="SimpleAssistPrefsTextRaid5"
+			inherits="SimpleAssistTT"
+			text="SASSTEXT_RTARGET5"
+			>
+			<Size>
+				<AbsDimension x="200" y="40"/>
+			</Size>
+			<Anchors>
+				<Anchor
+				relativeTo="SimpleAssistPrefsTextRaid4"
+				>
+					<Offset><AbsDimension x="0" y="-20"/></Offset>
+				</Anchor>
+			</Anchors>
+		</FontString>
+
+		<FontString name="SimpleAssistPrefsTextRaid6"
+			inherits="GameFontNormal"
+			justifyV="TOP"
+			justifyH="LEFT"
+			text="SASSTEXT_RTARGET6"
+			nonspacewrap="false"
+			>
+			<Size>
+				<AbsDimension x="200" y="40"/>
+			</Size>
+			<Anchors>
+				<Anchor
+					point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistPrefsTextRaid5"
+					>
+					<Offset><AbsDimension x="0" y="-20"/></Offset>
+				</Anchor>
+			</Anchors>
+			<Color r="1" g="1" b="1" a="1" />  <!-- White Color -->
+		</FontString>
+
+		<FontString name="SimpleAssistPrefsTextRaid7"
+			inherits="GameFontNormal"
+			justifyV="TOP"
+			justifyH="LEFT"
+			text="SASSTEXT_RTARGET7"
+			nonspacewrap="false"
+			>
+			<Size>
+				<AbsDimension x="200" y="40"/>
+			</Size>
+			<Anchors>
+				<Anchor
+				point="TOPLEFT"
+				relativePoint="TOPLEFT"
+				relativeTo="SimpleAssistPrefsTextRaid6"
+				>
+					<Offset><AbsDimension x="0" y="-20"/></Offset>
+				</Anchor>
+			</Anchors>
+			<Color r="1" g="1" b="1" a="1" />  <!-- White Color -->
+		</FontString>
+
+		<FontString name="SimpleAssistPrefsTextRaid8"
+			inherits="GameFontNormal"
+			justifyV="TOP"
+			justifyH="LEFT"
+			text="SASSTEXT_RTARGET8"
+			nonspacewrap="false"
+			>
+			<Size>
+				<AbsDimension x="200" y="40"/>
+			</Size>
+			<Anchors>
+				<Anchor
+				point="TOPLEFT"
+				relativePoint="TOPLEFT"
+				relativeTo="SimpleAssistPrefsTextRaid7"
+				>
+					<Offset><AbsDimension x="0" y="-20"/></Offset>
+				</Anchor>
+			</Anchors>
+			<Color r="1" g="1" b="1" a="1" />  <!-- White Color -->
+		</FontString>
+
+
+  </Layer>
+</Layers>
+
+<!-- start of content frame -->
+<frame name="SimpleAssist
+
+	Panel"
+	inherits="SimpleAssistPrefsTemplate"
+	>
+	<!-- child panel -->
+	<Scripts>
+		<OnLoad>
+
+	</OnLoad>
+	</Scripts>
+
+	<Layers>
+		<Layer level="ARTWORK">
+			<FontString
+				name="$parent_Text1"
+				inherits="GameFontNormal"
+				justifyV="TOP"
+				justifyH="LEFT"
+				text="SASSTEXT_SUMMARY"
+				nonspacewrap="false"
+				maxLines="3"
+				>
+				<Size>
+					<AbsDimension x="400" y="110"/>
+				</Size>
+
+				<Anchors>
+					<Anchor
+					point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="SimpleAssistDescriptionPanel"
+					>
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Color r="1" g="1" b="1" a="1" />  <!-- White Color -->
+			</FontString>
+
+			<FontString
+				name="$parent_H2"
+				inherits="GameFontNormal"
+				justifyH="LEFT"
+				text="SASSTEXT_BINDING_SET_TITLE"
+				>
+				<Anchors>
+					<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="SimpleAssistDescriptionPanel"
+					>
+						<Offset>
+							<AbsDimension x="0" y="-70"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Color r=".2" g="1" b="1" a="1" />
+			</FontString>
+
+			<FontString
+				name="$parent_Text2"
+				inherits="GameFontNormal"
+				justifyV="TOP"
+				justifyH="LEFT"
+				text="SASSTEXT_BINDING_SET"
+				nonspacewrap="false"
+				>
+				<Size>
+					<AbsDimension x="400" y="99" />
+				</Size>
+				<Anchors>
+					<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="$parent_H2"
+						>
+						<Offset>
+							<AbsDimension x="20" y="-14"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Color r="1" g="1" b="1" a="1" />  <!-- White Color -->
+			</FontString>
+
+			<FontString
+				name="$parent_H3"
+				inherits="GameFontNormal"
+				justifyH="LEFT"
+				text="SASSTEXT_BINDING_ASSIST_TITLE"
+				>
+				<Anchors>
+					<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="$parent_H2"
+					>
+						<Offset>
+								<AbsDimension x="0" y="-70"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Color r=".2" g="1" b="1" a="1" />
+			</FontString>
+
+			<FontString
+					name="$parent_Text3"
+					inherits="GameFontNormal"
+					justifyV="TOP"
+					justifyH="LEFT"
+					text="SASSTEXT_BINDING_ASSIST"
+					nonspacewrap="false"
+				>
+				<Size>
+					<AbsDimension x="400" y="99"/>
+				</Size>
+				<Anchors>
+					<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="$parent_H3"
+					>
+						<Offset>
+							<AbsDimension x="20" y="-14"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Color r="1" g="1" b="1" a="1" />  <!-- White Color -->
+			</FontString>
+
+			<FontString
+				name="$parent_H4"
+				inherits="GameFontNormal"
+				justifyH="LEFT"
+				text="SASSTEXT_BINDING_REQ_TITLE"
+				>
+				<Anchors>
+					<Anchor
+						point="TOPLEFT"
+						relativePoint="TOPLEFT"
+						relativeTo="$parent_H3"
+					>
+						<Offset>
+							<AbsDimension x="0" y="-100"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Color r=".2" g="1" b="1" a="1" />
+			</FontString>
+
+			<FontString
+				name="$parent_Text4"
+				inherits="GameFontNormal"
+				justifyV="TOP"
+				justifyH="LEFT"
+				text="SASSTEXT_BINDING_REQ"
+				nonspacewrap="false"
+				>
+				<Size>
+					<AbsDimension x="400" y="99" />
+				</Size>
+				<Anchors>
+					<Anchor
+					point="TOPLEFT"
+					relativePoint="TOPLEFT"
+					relativeTo="$parent_H4"
+					>
+						<Offset>
+							<AbsDimension x="20" y="-14"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Color r="1" g="1" b="1" a="1" />  <!-- White Color -->
+			</FontString>
+
+		</Layer>
+	</Layers>
+</frame>
+<!-- End of content frame-->
+
+
+<frames>
+
+</frames>
+
+</frame>
+
+<!-- End of content frame-->
+
+
+</Ui>
