@@ -1,29 +1,62 @@
 function SimpleAssist_Options_CreatePanel()
---  SassAddon.panel = CreateFrame( "Frame", "SassAddonPanel", UIParent );
-  -- Register in the Interface Addon Options GUI
-  -- Set the name for the Category for the Options Panel
-SassAddon.panel.name = "SimpleAssist";
- -- SimpleAssistPrefsFrame.name = "SimpleAssist";
+  SassAddon.panel = CreateFrame( "Frame", "SassAddonPanel", UIParent );
+
+    -- Register in the Interface Addon Options GUI
+  SassAddon.panel.name = "SimpleAssist";
 
   -- Add the panel to the Interface Options
   InterfaceOptions_AddCategory(SassAddon.panel);
 
--- child panels
-
---[[
-SimpleAssistDescriptionPanel.name = "Information";
-SimpleAssistDescriptionPanel.parent =  SimpleAssistPrefsFrame.name;
-InterfaceOptions_AddCategory(SimpleAssistDescriptionPanel);
- --]]
-
-
-SassAddon.panel2 = CreateFrame( "Frame", "SassAddonInfo", UIParent );
-SassAddon.panel2.name = "Information";
-SassAddon.panel2.parent = SassAddon.panel.name;
+  -- child panels:
+  SassAddon.panel2 = CreateFrame( "Frame", "SassAddonInfo", UIParent );
+  SassAddon.panel2.name = "Information";
+  SassAddon.panel2.parent = SassAddon.panel.name;
   InterfaceOptions_AddCategory(SassAddon.panel2);
 
 
+  local txt = SassAddon.txt;
+  txt.parent = SassAddonPanel; -- SassAddon.panel | SassAddon.panel2
+  txt.y = -15;
+  txt.x = 10;
+  txt.r = 1;
+  txt.g = .82;
+  txt.b = 0;
+  SassAddon.PanelText("Simple Assist", "GameFontNormalLarge");
+
+  txt.parent = SassAddonInfo; -- SassAddon.panel | SassAddon.panel2
+  txt.y = -15;
+  txt.x = 10;
+  txt.r = 1;
+  txt.g = .82;
+  txt.b = 0;
+  SassAddon.PanelText("Simple Assist - Information", "GameFontNormalLarge");
+
+
+  txt.y = txt.y + SASSTEXT.OPTIONSPACING;
+  for _,  thisline in ipairs(SASSTEXT.INFO_PANEL) do -- thisline is automatically local
+    local inherit = nil;
+    txt.r = 1;
+    txt.g = 1;
+    txt.b = 1;
+    if "*" == string.sub(thisline,1,1) then
+      thisline = strsub(thisline,2);
+      inherit = "GameFontNormalMed2";
+      txt.r = 1;
+      txt.g = .82;
+      txt.b = 0;
+    end
+    SassAddon.PanelText(thisline);
+    txt.y = txt.y + SASSTEXT.OPTIONSPACING;
+
 end
+
+
+end
+
+
+
+-- Text drawing
+--
 
 
 

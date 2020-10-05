@@ -8,7 +8,20 @@ SassAddon = {
 	myPlayer = {
 		name = UnitName("player"),
 		classStuff = UnitClass("player")
-	}
+	},
+	-- Init text stuff:
+	txt = {
+		x = 20,
+		y = 30,
+		justifyV = "TOP",
+		justifyH = "LEFT",
+		parent = UIParent, -- SassAddon.panel | SassAddon.panel2 not defined yet
+		r = .5,
+		g = 1,
+		b = .5,
+		a = 1
+
+	};
 };
 
 
@@ -87,12 +100,33 @@ function SassAddon.init()
 
 
 		-- Set up the preference panel:
-		--		SimpleAssist_Options_CreatePanel();
+		SimpleAssist_Options_CreatePanel();
 
 		SassAddon.addon_loaded = true; -- Only load once
 	end
 end
 
+
+function SassAddon.PanelText(text, inherit)
+	local txt = SassAddon.txt;
+	if nil == inherit then
+		inherit = "GameFontNormal"
+	end
+	local t = txt.parent:CreateFontString(
+		nil, -- new frame name
+		"ARTWORK", -- layer
+		inherit  -- inherits GameFontNormal "GameFontNormalLarge"
+	);
+	-- at some point, allow different inherit. But I can't
+	t:ClearAllPoints();
+	t:SetPoint("TOPLEFT", txt.x, txt.y);
+	t:SetPoint("RIGHT", -60);
+	t:SetJustifyH("LEFT");
+	t:SetJustifyV("TOP");
+	t:SetTextColor(txt.r, txt.g, txt.b, txt.a);
+	t:SetText(text);
+	DEFAULT_CHAT_FRAME:AddMessage(text,  0.5, 1.0, 0.5, 1);
+end
 
 --- Main WoW Event handler
  function SassAddon.HandleEvent(frame, event, ...)
