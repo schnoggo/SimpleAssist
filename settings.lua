@@ -1,4 +1,5 @@
 function SimpleAssist_Options_CreatePanel()
+  local line_vspace;
   SassAddon.panel = CreateFrame( "Frame", "SassAddonPanel", UIParent );
 
     -- Register in the Interface Addon Options GUI
@@ -15,6 +16,8 @@ function SimpleAssist_Options_CreatePanel()
 
 
   local txt = SassAddon.txt;
+
+  -- set up the panel
   txt.parent = SassAddonPanel; -- SassAddon.panel | SassAddon.panel2
   txt.y = -15;
   txt.x = 10;
@@ -23,6 +26,7 @@ function SimpleAssist_Options_CreatePanel()
   txt.b = 0;
   SassAddon.PanelText("Simple Assist", "GameFontNormalLarge");
 
+  -- set up panel 2
   txt.parent = SassAddonInfo; -- SassAddon.panel | SassAddon.panel2
   txt.y = -15;
   txt.x = 10;
@@ -31,23 +35,26 @@ function SimpleAssist_Options_CreatePanel()
   txt.b = 0;
   SassAddon.PanelText("Simple Assist - Information", "GameFontNormalLarge");
 
+  -- now indent after title:
+  txt.x = 15;
 
-  txt.y = txt.y + SASSTEXT.OPTIONSPACING;
+  txt.y = ( txt.y + SASSTEXT.TITLESPACING ) - SASSTEXT.LINESPACING; -- where to start the panel
   for _,  thisline in ipairs(SASSTEXT.INFO_PANEL) do -- thisline is automatically local
     local inherit = nil;
     txt.r = 1;
     txt.g = 1;
     txt.b = 1;
+    line_vspace = SASSTEXT.LINESPACING;
     if "*" == string.sub(thisline,1,1) then
       thisline = strsub(thisline,2);
       inherit = "GameFontNormalMed2";
       txt.r = 1;
       txt.g = .82;
       txt.b = 0;
+      line_vspace = SASSTEXT.TITLESPACING;
     end
+    txt.y = txt.y + line_vspace;
     SassAddon.PanelText(thisline);
-    txt.y = txt.y + SASSTEXT.OPTIONSPACING;
-
 end
 
 

@@ -3,7 +3,9 @@ SASSTEXT = {
 	TITLE="Schnoggo's Simple Assist Ver. " .. GetAddOnMetadata("SimpleAssist", "Version"),
 	WELCOME="SimpleAssist " .. GetAddOnMetadata("SimpleAssist", "Version") .. " Loaded. Type /sass to change settings.",
 
-	OPTIONSPACING=-60, -- vertical distance between each TITLE below:
+	TITLESPACING=-12, -- vertical distance between each TITLE below:
+	LINESPACING=-8,
+	COLWIDTH = 286,
 
 	ASSISTING="Assisting",
 	CLEARED="Assist Cleared",

@@ -19,7 +19,8 @@ SassAddon = {
 		r = .5,
 		g = 1,
 		b = .5,
-		a = 1
+		a = 1,
+		col_width = (SASSTEXT.COLWIDTH * 2) + 10;
 
 	};
 };
@@ -98,7 +99,6 @@ function SassAddon.init()
 		ev:SetScript("OnEvent", SassAddon.HandleEvent);
 
 
-
 		-- Set up the preference panel:
 		SimpleAssist_Options_CreatePanel();
 
@@ -106,7 +106,12 @@ function SassAddon.init()
 	end
 end
 
-
+--- Adds a text string to a settings panel
+-- Most of the cursor and color values are stored in SassAddon.txt global
+-- @tparam text to add to panel
+-- @tparam (optional) name of text object to inherit
+--
+-- Updates SassAddon.txt.y (vertical cursor position)
 function SassAddon.PanelText(text, inherit)
 	local txt = SassAddon.txt;
 	if nil == inherit then
@@ -120,12 +125,16 @@ function SassAddon.PanelText(text, inherit)
 	-- at some point, allow different inherit. But I can't
 	t:ClearAllPoints();
 	t:SetPoint("TOPLEFT", txt.x, txt.y);
-	t:SetPoint("RIGHT", -60);
+--	t:SetPoint("RIGHT", -60);
 	t:SetJustifyH("LEFT");
 	t:SetJustifyV("TOP");
 	t:SetTextColor(txt.r, txt.g, txt.b, txt.a);
+	t:SetWidth(txt.col_width);
 	t:SetText(text);
-	DEFAULT_CHAT_FRAME:AddMessage(text,  0.5, 1.0, 0.5, 1);
+	local hh = t:GetHeight();
+	txt.y = txt.y - (hh - SASSTEXT.LINESPACING);
+	DEFAULT_CHAT_FRAME:AddMessage("height: " .. hh);
+--	DEFAULT_CHAT_FRAME:AddMessage(text,  0.5, 1.0, 0.5, 1);
 end
 
 --- Main WoW Event handler
