@@ -106,6 +106,42 @@ function SassAddon.init()
 	end
 end
 
+
+
+-- Draws a control currently selected settings panel
+-- Uses the cursor values in SassAddon.txt global
+-- Assumes all control have an associated label
+--
+-- @tparam Type of control CheckButton | EditBox
+--
+function SassAddon.PanelControl(type, name, parent)
+	local control_frame;
+	local txt = SassAddon.txt;
+	if nil == parent then -- if a parent frame wasn't passed, use the current selection
+		parent = txt.parent;
+	end
+	if "CheckButton" == type then
+		local cb = CreateFrame("CheckButton", name, parent);
+		cb:ClearAllPoints();
+		cb:SetPoint(
+			"TOPLEFT", -- point (WoW point name)
+			parent, -- relative frame. maybe change this to the label at some point
+			"TOPLEFT", -- point of relative frame
+			txt.x - 30 , --offset x
+			txt.y --offset y
+		);
+
+	end
+
+
+	if "EditBox" == type then
+
+	end
+
+
+end
+
+
 --- Adds a text string to a settings panel
 -- Most of the cursor and color values are stored in SassAddon.txt global
 -- @tparam text to add to panel

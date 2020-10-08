@@ -25,6 +25,35 @@ function SimpleAssist_Options_CreatePanel()
   txt.g = .82;
   txt.b = 0;
   SassAddon.PanelText("Simple Assist", "GameFontNormalLarge");
+  -- now indent after title:
+  txt.x = 15;
+  txt.y = ( txt.y + SASSTEXT.TITLESPACING ) - SASSTEXT.LINESPACING; -- where to start the panel
+  SassAddon.PanelText(SASSTEXT.CHAT_HEAD);
+  -- Back to white:
+  txt.r = 1;
+  txt.g = 1;
+  txt.b = 1;
+  -- two columns:
+  txt.col_width = SASSTEXT.COLWIDTH;
+  txt.x = 40; -- leave room for the checkbox
+
+  -- figure out the loop --
+  -- Draw the label:
+    SassAddon.PanelText(SASSTEXT.CHAT_SAY);
+    SassAddon.PanelControl('CheckButton',"SimpleAssiste_Chat_Say_Control");
+
+
+--[[
+  CHAT_EMOTE="Emote",
+  CHAT_YELL="Yell",
+  CHAT_RAID="Raid",
+  CHAT_PARTY="Party",
+  CHAT_SAY="Say",
+  CHAT_RW="RaidWarning",
+--]]
+
+-- SimpleAssistPrefsTextSAY
+
 
   -- set up panel 2
   txt.parent = SassAddonInfo; -- SassAddon.panel | SassAddon.panel2
@@ -34,7 +63,6 @@ function SimpleAssist_Options_CreatePanel()
   txt.g = .82;
   txt.b = 0;
   SassAddon.PanelText("Simple Assist - Information", "GameFontNormalLarge");
-
   -- now indent after title:
   txt.x = 15;
 
