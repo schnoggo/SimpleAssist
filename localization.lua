@@ -2,7 +2,7 @@ SASSTEXT = {
 
 	TITLE="Schnoggo's Simple Assist Ver. " .. GetAddOnMetadata("SimpleAssist", "Version"),
 	WELCOME="SimpleAssist " .. GetAddOnMetadata("SimpleAssist", "Version") .. " Loaded. Type /sass to change settings.",
-
+	FIRST_RUN="First time running SimpleAssist on this character. Customize with Interface:Addons:SimpleAssist.",
 	TITLESPACING=-12, -- vertical distance between each TITLE below:
 	LINESPACING=-8,
 	COLWIDTH = 286,

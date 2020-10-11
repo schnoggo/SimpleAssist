@@ -3,7 +3,6 @@
 -- our big global object:
 SassAddon = {
 	addon_loaded = false,
-	variables_loaded = false,
 	pending_learn = nil,
 	myPlayer = {
 		name = UnitName("player"),
@@ -30,9 +29,9 @@ SassAddon = {
 local boot_frame = CreateFrame("Frame")
 boot_frame:RegisterEvent("ADDON_LOADED")
 boot_frame:SetScript(
-  "OnEvent", function(frame,event,...)
+  "OnEvent", function(frame,event, addon, ...)
 		if frame == boot_frame then
-	    SassAddon.init();
+	    SassAddon.init(event, addon);
 		end
   end
 );
@@ -55,55 +54,78 @@ local SimpleAssistDefaults={
 	SimpleAssistDefaults["CustomChat"][1]="Help";
 	SimpleAssistDefaults["CustomChat"][2]="in attacking";
 	SimpleAssistDefaults["CustomChat"][3]=".";
-	SimpleAssistDefaults["version"]=3;
+	SimpleAssistDefaults["version"]=4; -- variables format
 
 -- My local functions:
 -- ====================
 
 
-
-
-
-
-
--- Event functions
-
-
-
-	DEFAULT_CHAT_FRAME:AddMessage('green is the grass',  0.5, 1.0, 0.5, 1);
-
-
 --- Once the addon is loaded, register all our events and create our frames
 --
-function SassAddon.init()
+function SassAddon.init(event, addon)
 	local myPlayer = SassAddon.myPlayer; -- local shortcut
-	if ( false == SassAddon.addon_loaded ) then -- only need to load once
-		DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.WELCOME,  0.5, 1.0, 0.5, 1);
-		if (not myPlayer.name) then -- hasn't been initialized
-			myPlayer.name = UnitName("player");
-		end
+	local need_to_init = false;
+	if event == "ADDON_LOADED" and addon == "SimpleAssist" then
+		DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.WELCOME,  0.5, 1.0, 0.5, 1); -- leave for testing
 
-		-- Register all our events:
-		SassAddon.eventframe = CreateFrame("Frame" ); -- the frame to listen to all our events
-		local ev = SassAddon.eventframe; -- local shortcut
+		if ( false == SassAddon.addon_loaded ) then -- only need to load once
+			DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.FIRST_RUN,  0.5, 1.0, 0.5, 1);
+			SassAddon.addon_loaded = true;
 
-		-- and register our basic events:
-		ev:RegisterEvent("PLAYER_ENTERING_WORLD");
-		ev:RegisterEvent("CHAT_MSG_CHANNEL");
-		ev:RegisterEvent("VARIABLES_LOADED");
-		ev:RegisterEvent("UPDATE_BINDINGS");
-		ev:RegisterEvent("PLAYER_LEAVE_COMBAT");
-		ev:RegisterEvent("PLAYER_REGEN_ENABLED");
+			-- do we need to init the saved variables?
+			if not (SimpleAssistCharVars) then
+				need_to_init = true;
+			else
+				if (nil == SimpleAssistCharVars["version"]) then
+					need_to_init = true;
+				else
+					if SimpleAssistCharVars["version"] < 4 then
+						need_to_init = true;
+					end
+				end
+			end
 
-		-- self:RegisterEvent("CHAT_MSG_TEXT_EMOTE"); -- for listening
-		ev:SetScript("OnEvent", SassAddon.HandleEvent);
+
+			if (need_to_init) then
+				-- never saved, create from scratch
+				SimpleAssistCharVars={
+					SimpleAssistPrefsRAID=false,
+					SimpleAssistPrefsSAY = false,
+					SimpleAssistPrefsYELL = false,
+					SimpleAssistPrefsPARTY = false,
+					SimpleAssistRaidIcon=0
+				};
+				SimpleAssistCharVars["CustomChat"]={};
+				SimpleAssistCharVars["CustomChat"][1]=SASSTEXT_CUSTOM_CALL_BEFORE;
+				SimpleAssistCharVars["CustomChat"][2]=SASSTEXT_CUSTOM_CALL_MIDDLE;
+				SimpleAssistCharVars["CustomChat"][3]=SASSTEXT_CUSTOM_CALL_AFTER;
+				SimpleAssistCharVars["version"]=4; -- data format
+			end
 
 
-		-- Set up the preference panel:
-		SimpleAssist_Options_CreatePanel();
+			if (not myPlayer.name) then -- hasn't been initialized
+				myPlayer.name = UnitName("player");
+			end
 
-		SassAddon.addon_loaded = true; -- Only load once
-	end
+			-- Register all our events:
+			SassAddon.eventframe = CreateFrame("Frame" ); -- the frame to listen to all our events
+			local ev = SassAddon.eventframe; -- local shortcut
+
+			-- and register our basic events:
+			ev:RegisterEvent("PLAYER_ENTERING_WORLD");
+			ev:RegisterEvent("CHAT_MSG_CHANNEL");
+			ev:RegisterEvent("VARIABLES_LOADED");
+			ev:RegisterEvent("UPDATE_BINDINGS");
+			ev:RegisterEvent("PLAYER_LEAVE_COMBAT");
+			ev:RegisterEvent("PLAYER_REGEN_ENABLED");
+
+			-- self:RegisterEvent("CHAT_MSG_TEXT_EMOTE"); -- for listening
+			ev:SetScript("OnEvent", SassAddon.HandleEvent);
+
+			-- Set up the preference panel:
+			SimpleAssist_Options_CreatePanel();
+		end --SassAddon.addon_loaded
+	end -- ADDON_LOADED
 end
 
 
@@ -121,15 +143,31 @@ function SassAddon.PanelControl(type, name, parent)
 		parent = txt.parent;
 	end
 	if "CheckButton" == type then
-		local cb = CreateFrame("CheckButton", name, parent);
+		local cb = CreateFrame(
+		"CheckButton", -- frame type
+		name, -- name of newly created frame (can be nil)
+		parent, -- parent frame
+		"ChatConfigCheckButtonTemplate" -- virtual frame template
+    -- numberic id of frame
+);
 		cb:ClearAllPoints();
 		cb:SetPoint(
 			"TOPLEFT", -- point (WoW point name)
 			parent, -- relative frame. maybe change this to the label at some point
 			"TOPLEFT", -- point of relative frame
 			txt.x - 30 , --offset x
-			txt.y --offset y
+			txt.y + 24 --offset y
 		);
+		cb: HookScript("OnClick", SimpleAssist_Options_OnClick);
+
+	--	cb:SetText("CheckBox Name")
+	--	cb.tooltip = "This is where you place MouseOver Text."
+	--[[
+		cb:HookScript("OnClick", function()
+			--do stuff
+		end)
+		--]]
+
 
 	end
 
@@ -169,8 +207,7 @@ function SassAddon.PanelText(text, inherit)
 	t:SetText(text);
 	local hh = t:GetHeight();
 	txt.y = txt.y - (hh - SASSTEXT.LINESPACING);
-	DEFAULT_CHAT_FRAME:AddMessage("height: " .. hh);
---	DEFAULT_CHAT_FRAME:AddMessage(text,  0.5, 1.0, 0.5, 1);
+
 end
 
 --- Main WoW Event handler
@@ -183,34 +220,8 @@ end
 -- VARIABLES_LOADED
 -- ================
 
-	if ( event == "VARIABLES_LOADED" ) then
+	if ( event == "VARIABLES_LOADED" ) then -- sounds like variables_loaded events should be ADDON_LOADED
 		-- record that we have been loaded:
-		SassAddon.variables_loaded = true;
-
-
-		if not (SimpleAssistSavedVars) then
-			SimpleAssistSavedVars={
-			SimpleAssistPrefsRAID=false,
-			SimpleAssistPrefsSAY = false,
-			SimpleAssistPrefsYELL = false,
-			SimpleAssistPrefsPARTY = false,
-			SimpleAssistRaidIcon=0};
-			SimpleAssistSavedVars["CustomChat"]={};
-			SimpleAssistSavedVars["CustomChat"][1]=SASSTEXT_CUSTOM_CALL_BEFORE;
-			SimpleAssistSavedVars["CustomChat"][2]=SASSTEXT_CUSTOM_CALL_MIDDLE;
-			SimpleAssistSavedVars["CustomChat"][3]=SASSTEXT_CUSTOM_CALL_AFTER;
-		end
-
-
-		if (SimpleAssistSavedVars["version"] == nil) then
-			SimpleAssistSavedVars["version"] = GetAddOnMetadata("SimpleAssist", "Version");
-			SimpleAssistSavedVars["CustomChat"]={};
-			SimpleAssistSavedVars["CustomChat"][1]=SASSTEXT_CUSTOM_CALL_BEFORE;
-			SimpleAssistSavedVars["CustomChat"][2]=SASSTEXT_CUSTOM_CALL_MIDDLE;
-			SimpleAssistSavedVars["CustomChat"][3]=SASSTEXT_CUSTOM_CALL_AFTER;
-		else
-
-		end
 
 		eventHandled = true;
 	end -- ( event == "VARIABLES_LOADED" )
@@ -336,9 +347,9 @@ function  SimpleAssist_AskAssist()
 		-- string.gsub(s, pattern, replace [, n])
 		-- msg=string.gsub(msg, "{name}", myPlayerName );
 		-- msg=string.gsub(msg, "{target}", target_name );
-		local p1=SimpleAssistSavedVars["CustomChat"][1];
-		local p2=SimpleAssistSavedVars["CustomChat"][2];
-		local p3=SimpleAssistSavedVars["CustomChat"][3];
+		local p1=SimpleAssistCharVars["CustomChat"][1];
+		local p2=SimpleAssistCharVars["CustomChat"][2];
+		local p3=SimpleAssistCharVars["CustomChat"][3];
 
 		-- format the message:
 		if (p1 ~= "") then
@@ -355,43 +366,43 @@ function  SimpleAssist_AskAssist()
 		-- tell it to the world (or party, or raid...)
 		if (IsInGroup()) then
 			if (IsInRaid()) then
-				if (SimpleAssistSavedVars["SimpleAssistPrefsRAID"]) then
+				if (SimpleAssistCharVars["SimpleAssistPrefsRAID"]) then
 					SendChatMessage(msg, "RAID");
 				end
 
-				if (SimpleAssistSavedVars["SimpleAssistPrefsRW"]) then
+				if (SimpleAssistCharVars["SimpleAssistPrefsRW"]) then
 					SendChatMessage(msg, "RAID_WARNING");
 				end
 
-				if (SimpleAssistSavedVars["SimpleAssistRaidIcon"] ~= 0) then
-					SetRaidTarget("target",SimpleAssistSavedVars["SimpleAssistRaidIcon"]);
+				if (SimpleAssistCharVars["SimpleAssistRaidIcon"] ~= 0) then
+					SetRaidTarget("target",SimpleAssistCharVars["SimpleAssistRaidIcon"]);
 				end
 
 			else -- not raid, just party
 
-				if (SimpleAssistSavedVars["SimpleAssistPrefsPARTY"] ) then
+				if (SimpleAssistCharVars["SimpleAssistPrefsPARTY"] ) then
 					SendChatMessage(msg, "PARTY");
 				end
 
-				if (SimpleAssistSavedVars["SimpleAssistRaidIcon"] ~= 0) then
-					SetRaidTarget("target",SimpleAssistSavedVars["SimpleAssistRaidIcon"]);
+				if (SimpleAssistCharVars["SimpleAssistRaidIcon"] ~= 0) then
+					SetRaidTarget("target",SimpleAssistCharVars["SimpleAssistRaidIcon"]);
 				end
 			end -- party
 
 		else -- not in a group, so only yell, say or emote
-			if (SimpleAssistSavedVars["SimpleAssistPrefsYELL"]) then
+			if (SimpleAssistCharVars["SimpleAssistPrefsYELL"]) then
 				SendChatMessage(msg, "YELL");
 			end
-			if (SimpleAssistSavedVars["SimpleAssistPrefsSAY"]) then
+			if (SimpleAssistCharVars["SimpleAssistPrefsSAY"]) then
 				SendChatMessage(msg, "SAY");
 			end
 
-			if (SimpleAssistSavedVars["SimpleAssistPrefsEMOTE"]) then
+			if (SimpleAssistCharVars["SimpleAssistPrefsEMOTE"]) then
 				DoEmote("ATTACKMYTARGET");
 			end
 
-			if (SimpleAssistSavedVars["SimpleAssistRaidIcon"] ~= 0) then
-				SetRaidTarget("target",SimpleAssistSavedVars["SimpleAssistRaidIcon"]);
+			if (SimpleAssistCharVars["SimpleAssistRaidIcon"] ~= 0) then
+				SetRaidTarget("target",SimpleAssistCharVars["SimpleAssistRaidIcon"]);
 			end
 
 

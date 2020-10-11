@@ -14,45 +14,57 @@ function SimpleAssist_Options_CreatePanel()
   SassAddon.panel2.parent = SassAddon.panel.name;
   InterfaceOptions_AddCategory(SassAddon.panel2);
 
-
   local txt = SassAddon.txt;
 
   -- set up the panel
   txt.parent = SassAddonPanel; -- SassAddon.panel | SassAddon.panel2
+  line_vspace = SASSTEXT.LINESPACING;
+  -- draw the panel title:
   txt.y = -15;
   txt.x = 10;
   txt.r = 1;
   txt.g = .82;
   txt.b = 0;
   SassAddon.PanelText("Simple Assist", "GameFontNormalLarge");
+
   -- now indent after title:
   txt.x = 15;
-  txt.y = ( txt.y + SASSTEXT.TITLESPACING ) - SASSTEXT.LINESPACING; -- where to start the panel
+  txt.y = ( txt.y + SASSTEXT.TITLESPACING ) - line_vspace; -- where to start the panel
+
+  -- Chat type selector intro text:
   SassAddon.PanelText(SASSTEXT.CHAT_HEAD);
+
+  -- And now the checkboxes and labels:
   -- Back to white:
   txt.r = 1;
   txt.g = 1;
   txt.b = 1;
   -- two columns:
   txt.col_width = SASSTEXT.COLWIDTH;
-  txt.x = 40; -- leave room for the checkbox
+  txt.x = 50; -- leave room for the checkbox
 
-  -- figure out the loop --
-  -- Draw the label:
-    SassAddon.PanelText(SASSTEXT.CHAT_SAY);
-    SassAddon.PanelControl('CheckButton',"SimpleAssiste_Chat_Say_Control");
+  local max_per_col = 3;
+  local items_in_col = 0;
+  local top_of_block = txt.y; -- save it so we can do columns
+  -- Walk through available emotes:
+    local emote_types = {
+      "CHAT_EMOTE", "CHAT_YELL", "CHAT_RAID", "CHAT_PARTY", "CHAT_SAY", "CHAT_RW"
+    };
+
+    for _,  emote_type in ipairs(emote_types) do -- emote_type is automatically local
+      -- Draw the label:
+      SassAddon.PanelText(SASSTEXT[emote_type]);
 
 
---[[
-  CHAT_EMOTE="Emote",
-  CHAT_YELL="Yell",
-  CHAT_RAID="Raid",
-  CHAT_PARTY="Party",
-  CHAT_SAY="Say",
-  CHAT_RW="RaidWarning",
---]]
-
--- SimpleAssistPrefsTextSAY
+      SassAddon.PanelControl('CheckButton',"SASS_" .. emote_type);
+      txt.y = txt.y + line_vspace;
+      items_in_col = items_in_col +1;
+      if items_in_col >= max_per_col then
+        items_in_col = 0;
+        txt.y = top_of_block;
+        txt.x = txt.x + SASSTEXT.COLWIDTH;
+      end
+    end
 
 
   -- set up panel 2
@@ -83,8 +95,7 @@ function SimpleAssist_Options_CreatePanel()
     end
     txt.y = txt.y + line_vspace;
     SassAddon.PanelText(thisline);
-end
-
+  end
 
 end
 
@@ -99,11 +110,12 @@ end
 -- =============================
 
 -- prefs:
-function SimpleAssist_Options_OnClick(self)
-	id = self:GetID()
-	local buttonName=self:GetName()
-	SimpleAssistDefaults[buttonName] =getglobal(buttonName):GetChecked();
-	SimpleAssistSavedVars[buttonName] =getglobal(buttonName):GetChecked();
+function SimpleAssist_Options_OnClick(ef, ...)
+  if nil ~= ef then
+  	buttonName=ef:GetName();
+  	SimpleAssistDefaults[buttonName] =_G[buttonName]:GetChecked();
+  	SimpleAssistSavedVars[buttonName] =_G[buttonName]:GetChecked();
+  end
 end
 
 

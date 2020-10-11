@@ -1,4 +1,4 @@
-SimpleAssist v3.31
+SimpleAssist v4.00
 
 Description
 ===========
@@ -37,6 +37,12 @@ Known Issues
 
 Versions
 ========
+4.00 October 15, 2020
+  * Complete rewrite:
+  * Updated TOC and version for WoW client v9.0 (Shadowlands)
+  * Settings are now saved per Character
+  * The settings have been moved to a standard Addon Settings panel
+
 3.31 January 15, 2020
 * Updated TOC and version for WoW client v8.3 (Visions of N'Zoth)
 
