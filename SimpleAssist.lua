@@ -19,9 +19,9 @@ SassAddon = {
 		g = 1,
 		b = .5,
 		a = 1,
-		col_width = (SASSTEXT.COLWIDTH * 2) + 10;
-
-	};
+		col_width = (SASSTEXT.COLWIDTH * 2) + 10
+	},
+	unsaved_setting = {}
 };
 
 
@@ -69,7 +69,6 @@ function SassAddon.init(event, addon)
 		DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.WELCOME,  0.5, 1.0, 0.5, 1); -- leave for testing
 
 		if ( false == SassAddon.addon_loaded ) then -- only need to load once
-			DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.FIRST_RUN,  0.5, 1.0, 0.5, 1);
 			SassAddon.addon_loaded = true;
 
 			-- do we need to init the saved variables?
@@ -87,13 +86,15 @@ function SassAddon.init(event, addon)
 
 
 			if (need_to_init) then
+				DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.FIRST_RUN,  0.5, 1.0, 0.5, 1);
 				-- never saved, create from scratch
 				SimpleAssistCharVars={
-					SimpleAssistPrefsRAID=false,
-					SimpleAssistPrefsSAY = false,
-					SimpleAssistPrefsYELL = false,
-					SimpleAssistPrefsPARTY = false,
-					SimpleAssistRaidIcon=0
+					CHAT_EMOTE = false,
+					CHAT_RAID=false,
+					CHAT_SAY = false,
+					CHAT_YELL = false,
+					CHAT_PARTY = false,
+					CHAT_RW = false
 				};
 				SimpleAssistCharVars["CustomChat"]={};
 				SimpleAssistCharVars["CustomChat"][1]=SASSTEXT_CUSTOM_CALL_BEFORE;
@@ -135,6 +136,8 @@ end
 -- Assumes all control have an associated label
 --
 -- @tparam Type of control CheckButton | EditBox
+-- @tparam Name of control. This will be prepended with "SASS_CONTROL_" to be global safe
+-- @tparam (optional) parent frame
 --
 function SassAddon.PanelControl(type, name, parent)
 	local control_frame;
@@ -144,12 +147,12 @@ function SassAddon.PanelControl(type, name, parent)
 	end
 	if "CheckButton" == type then
 		local cb = CreateFrame(
-		"CheckButton", -- frame type
-		name, -- name of newly created frame (can be nil)
-		parent, -- parent frame
-		"ChatConfigCheckButtonTemplate" -- virtual frame template
-    -- numberic id of frame
-);
+			"CheckButton", -- frame type
+			"SASS_CONTROL_" .. name, -- name of newly created frame (can't be nil for our purposes)
+			parent, -- parent frame
+			"ChatConfigCheckButtonTemplate" -- virtual frame template
+	    -- numberic id of frame
+		);
 		cb:ClearAllPoints();
 		cb:SetPoint(
 			"TOPLEFT", -- point (WoW point name)
@@ -159,23 +162,18 @@ function SassAddon.PanelControl(type, name, parent)
 			txt.y + 24 --offset y
 		);
 		cb: HookScript("OnClick", SimpleAssist_Options_OnClick);
+		-- set the value:
 
-	--	cb:SetText("CheckBox Name")
-	--	cb.tooltip = "This is where you place MouseOver Text."
-	--[[
-		cb:HookScript("OnClick", function()
-			--do stuff
-		end)
-		--]]
-
-
-	end
+		local current_value = SimpleAssistCharVars[name];
+		SassAddon.unsaved_setting[name] = current_value;
+		cb:SetChecked(current_value);
+		cb["SASS_SETTING"] = name; -- so we can know which setting this maps to
+	end -- CheckButton
 
 
 	if "EditBox" == type then
 
 	end
-
 
 end
 

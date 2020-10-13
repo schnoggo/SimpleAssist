@@ -56,7 +56,7 @@ function SimpleAssist_Options_CreatePanel()
       SassAddon.PanelText(SASSTEXT[emote_type]);
 
 
-      SassAddon.PanelControl('CheckButton',"SASS_" .. emote_type);
+      SassAddon.PanelControl('CheckButton', emote_type); -- "SASS_" is prepended to name
       txt.y = txt.y + line_vspace;
       items_in_col = items_in_col +1;
       if items_in_col >= max_per_col then
@@ -110,11 +110,23 @@ end
 -- =============================
 
 -- prefs:
+---
+-- Record a setting widget status to the saved vars
 function SimpleAssist_Options_OnClick(ef, ...)
   if nil ~= ef then
-  	buttonName=ef:GetName();
+  --	local buttonName=ef:GetName();
+    -- skip the "SASS_CONTROL_"
+    local button_name = ef["SASS_SETTING"];
+    local state = ef:GetChecked();
+    SassAddon.unsaved_setting[button_name] = state;
+    DEFAULT_CHAT_FRAME:AddMessage('checkbox ' .. button_name .. ': ' .. tostring(state),  1, 1.0, 0.5, 1);
+
+
+--[[
+  Only save if they save the results
   	SimpleAssistDefaults[buttonName] =_G[buttonName]:GetChecked();
   	SimpleAssistSavedVars[buttonName] =_G[buttonName]:GetChecked();
+    --]]
   end
 end
 
