@@ -54,6 +54,38 @@ function SassAddon.PanelControl(type, name, parent)
 
 	if "EditBox" == type then
 
+    local ebx = CreateFrame(
+      "EditBox", -- frame type
+      "SASS_CONTROL_" .. name, -- name of newly created frame (can't be nil for our purposes)
+      parent, -- parent frame
+      "InputBoxTemplate" -- virtual frame template
+      -- numberic id of frame
+    );
+    ebx:SetSize(100, 20)
+
+    ebx:ClearAllPoints();
+    ebx:SetPoint(
+      "TOPLEFT", -- point (WoW point name)
+      parent, -- relative frame. maybe change this to the label at some point
+      "TOPLEFT", -- point of relative frame
+      txt.x , --offset x
+      txt.y --offset y
+    );
+    ebx:SetAutoFocus(false);
+
+
+    --eb: HookScript("OnClick", SimpleAssist_Checkbox_OnClick);
+    -- set the value:
+
+  local current_value = SimpleAssistCharVars[name];
+  current_value = "waffles";
+  SassAddon.unsaved_setting[name] = current_value;
+  ebx:SetText(current_value);
+  ebx:SetCursorPosition(0)
+
+  --  eb:SetChecked(current_value);
+  --  eb["SASS_SETTING"] = name; -- so we can know which setting this maps to
+  --]]
 	end
 
 end

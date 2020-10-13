@@ -2,7 +2,7 @@ function SimpleAssist_Options_CreatePanel()
   local line_vspace;
   SassAddon.panel = CreateFrame( "Frame", "SassAddonPanel", UIParent );
 
-    -- Register in the Interface Addon Options GUI
+  -- Register in the Interface Addon Options GUI
   SassAddon.panel.name = "SimpleAssist";
 
   -- Add the panel to the Interface Options
@@ -14,9 +14,9 @@ function SimpleAssist_Options_CreatePanel()
   SassAddon.panel2.parent = SassAddon.panel.name;
   InterfaceOptions_AddCategory(SassAddon.panel2);
 
-  local txt = SassAddon.txt;
+  local txt = SassAddon.txt; -- make a shorter reference
 
-  -- set up the panel
+  -- set up the UI panel
   txt.parent = SassAddonPanel; -- SassAddon.panel | SassAddon.panel2
   line_vspace = SASSTEXT.LINESPACING;
   -- draw the panel title:
@@ -82,6 +82,7 @@ CUSTOM_CALL_AFTER=".",
     txt.y = -170;
     SassAddon.PanelColumns(1);
     SassAddon.PanelText(SASSTEXT.CUSTOM_CALL_HEAD);
+    SassAddon.PanelControl('EditBox', 'CUSTOM_CALL_BEFORE');
 
 
 
