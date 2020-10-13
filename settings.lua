@@ -39,8 +39,7 @@ function SimpleAssist_Options_CreatePanel()
   txt.r = 1;
   txt.g = 1;
   txt.b = 1;
-  -- two columns:
-  txt.col_width = SASSTEXT.COLWIDTH;
+  SassAddon.PanelColumns(2); -- two columns
   txt.x = 50; -- leave room for the checkbox
 
   local max_per_col = 3;
@@ -59,12 +58,36 @@ function SimpleAssist_Options_CreatePanel()
       SassAddon.PanelControl('CheckButton', emote_type); -- "SASS_" is prepended to name
       txt.y = txt.y + line_vspace;
       items_in_col = items_in_col +1;
-      if items_in_col >= max_per_col then
+      if items_in_col >= max_per_col then -- step over to the second column
         items_in_col = 0;
         txt.y = top_of_block;
         txt.x = txt.x + SASSTEXT.COLWIDTH;
       end
     end
+
+-- The text boxes for messages:
+--[[
+CUSTOM_CALL_HEAD="You can customize the message sent in chat when requesting assistance:",
+CUSTOM_CALL_BEFORE="Help ",
+CUSTOM_CALL_PLAYERNAME=UnitName("player"),
+CUSTOM_CALL_MIDDLE=" in attacking ",
+CUSTOM_CALL_MOBNAME="[Target]",
+CUSTOM_CALL_AFTER=".",
+--]]
+
+    txt.x = 15;
+    txt.r = 1;
+    txt.g = .82;
+    txt.b = 0;
+    txt.y = -170;
+    SassAddon.PanelColumns(1);
+    SassAddon.PanelText(SASSTEXT.CUSTOM_CALL_HEAD);
+
+
+
+
+
+
 
 
   -- set up panel 2
@@ -112,7 +135,7 @@ end
 -- prefs:
 ---
 -- Record a setting widget status to the saved vars
-function SimpleAssist_Options_OnClick(ef, ...)
+function SimpleAssist_Checkbox_OnClick(ef, ...)
   if nil ~= ef then
   --	local buttonName=ef:GetName();
     -- skip the "SASS_CONTROL_"

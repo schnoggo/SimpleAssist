@@ -6,5 +6,6 @@
 ## Dependencies:
 ## SavedVariablesPerCharacter: SimpleAssistCharVars
 localization.lua
-settings.lua
 SimpleAssist.lua
+settings_panel_lib.lua
+settings.lua
