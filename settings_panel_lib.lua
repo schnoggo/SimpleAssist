@@ -61,7 +61,7 @@ function SassAddon.PanelControl(type, name, parent)
       "InputBoxTemplate" -- virtual frame template
       -- numberic id of frame
     );
-    ebx:SetSize(100, 20)
+    ebx:SetSize(110, 20)
 
     ebx:ClearAllPoints();
     ebx:SetPoint(
@@ -69,7 +69,7 @@ function SassAddon.PanelControl(type, name, parent)
       parent, -- relative frame. maybe change this to the label at some point
       "TOPLEFT", -- point of relative frame
       txt.x , --offset x
-      txt.y --offset y
+      txt.y +4 --offset y
     );
     ebx:SetAutoFocus(false);
 

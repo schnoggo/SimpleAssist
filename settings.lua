@@ -74,16 +74,29 @@ CUSTOM_CALL_MIDDLE=" in attacking ",
 CUSTOM_CALL_MOBNAME="[Target]",
 CUSTOM_CALL_AFTER=".",
 --]]
-
+    local this_row_y = -200;
     txt.x = 15;
     txt.r = 1;
     txt.g = .82;
     txt.b = 0;
-    txt.y = -170;
+    txt.y = this_row_y;
     SassAddon.PanelColumns(1);
     SassAddon.PanelText(SASSTEXT.CUSTOM_CALL_HEAD);
+    this_row_y = this_row_y +20;
+    txt.y = this_row_y;
     SassAddon.PanelControl('EditBox', 'CUSTOM_CALL_BEFORE');
-
+    txt.r = 1;
+    txt.g = 1;
+    txt.b = 1;
+    txt.x = 132;
+    txt.y = this_row_y;
+    SassAddon.PanelText(UnitName("player"));
+    txt.y = this_row_y;
+    txt.x = 262;
+    SassAddon.PanelControl('EditBox', 'CUSTOM_CALL_MIDDLE');
+    txt.y = this_row_y;
+    txt.x = 380;
+    SassAddon.PanelText(SASSTEXT.CUSTOM_CALL_MOBNAME);
 
 
 
