@@ -1,9 +1,13 @@
 function SimpleAssist_Options_CreatePanel()
   local line_vspace;
+  SassAddon.LoadDefaults();
   SassAddon.panel = CreateFrame( "Frame", "SassAddonPanel", UIParent );
 
   -- Register in the Interface Addon Options GUI
   SassAddon.panel.name = "SimpleAssist";
+  SassAddon.panel.refresh = "SassAddon.LoadDefaults";
+  SassAddon.panel.default = "SassAddon.LoadDefaults";
+
 
   -- Add the panel to the Interface Options
   InterfaceOptions_AddCategory(SassAddon.panel);

@@ -44,17 +44,18 @@ boot_frame:SetScript(
 
 -- default config settings
 
-local SimpleAssistDefaults={
-	SimpleAssistPrefsRAID = false,
-	SimpleAssistPrefsSAY = false,
-	SimpleAssistPrefsYELL = false,
-	SimpleAssistPrefsPARTY = false
+	SassAddon.defaults={
+		CHAT_EMOTE = false,
+		CHAT_RAID=false,
+		CHAT_SAY = false,
+		CHAT_YELL = false,
+		CHAT_PARTY = false,
+		CHAT_RW = false,
+		CUSTOM_CALL_BEFORE = SASSTEXT.CUSTOM_CALL_BEFORE,
+		CUSTOM_CALL_MIDDLE = SASSTEXT.CUSTOM_CALL_MIDDLE,
+		CUSTOM_CALL_AFTER =	'.',
+		version = 4
 	};
-	SimpleAssistDefaults["CustomChat"]={};
-	SimpleAssistDefaults["CustomChat"][1]="Help";
-	SimpleAssistDefaults["CustomChat"][2]="in attacking";
-	SimpleAssistDefaults["CustomChat"][3]=".";
-	SimpleAssistDefaults["version"]=4; -- variables format
 
 -- My local functions:
 -- ====================
@@ -83,24 +84,15 @@ function SassAddon.init(event, addon)
 					end
 				end
 			end
-
+need_to_init = true;
 
 			if (need_to_init) then
 				DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.FIRST_RUN,  0.5, 1.0, 0.5, 1);
 				-- never saved, create from scratch
-				SimpleAssistCharVars={
-					CHAT_EMOTE = false,
-					CHAT_RAID=false,
-					CHAT_SAY = false,
-					CHAT_YELL = false,
-					CHAT_PARTY = false,
-					CHAT_RW = false
-				};
-				SimpleAssistCharVars["CustomChat"]={};
-				SimpleAssistCharVars["CustomChat"][1]=SASSTEXT_CUSTOM_CALL_BEFORE;
-				SimpleAssistCharVars["CustomChat"][2]=SASSTEXT_CUSTOM_CALL_MIDDLE;
-				SimpleAssistCharVars["CustomChat"][3]=SASSTEXT_CUSTOM_CALL_AFTER;
-				SimpleAssistCharVars["version"]=4; -- data format
+				SimpleAssistCharVars = SassAddon.deepcopy(SassAddon.defaults);
+				SassAddon.unsaved_settings = SassAddon.deepcopy(SimpleAssistCharVars);
+
+
 			end
 
 

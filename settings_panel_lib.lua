@@ -1,5 +1,36 @@
 -- functions to draw and read controls on a settings panel
 
+
+function SassAddon.deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[SassAddon.deepcopy(orig_key)] = SassAddon.deepcopy(orig_value)
+        end
+        setmetatable(copy, SassAddon.deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+--[[
+function SassAddon.CopyTable(src, dest)
+	for index, value in pairs(src) do
+		if type(value) == "table" then
+			dest[index] = {}
+			SassAddon.CopyTable(value, dest[index])
+		else
+			dest[index] = value
+		end
+	end
+end
+--]]
+function SassAddon.LoadDefaults()
+  SassAddon.unsaved_settings = SassAddon.deepcopy(SimpleAssistCharVars);
+end
+
 -- configure the setting panels to use specified columns (1 or 2)
 function SassAddon.PanelColumns(cols)
 	local txt = SassAddon.txt;
@@ -45,8 +76,8 @@ function SassAddon.PanelControl(type, name, parent)
 		cb: HookScript("OnClick", SimpleAssist_Checkbox_OnClick);
 		-- set the value:
 
-		local current_value = SimpleAssistCharVars[name];
-		SassAddon.unsaved_setting[name] = current_value;
+		local current_value = SassAddon.unsaved_settings[name];
+		SassAddon.unsaved_settings[name] = current_value;
 		cb:SetChecked(current_value);
 		cb["SASS_SETTING"] = name; -- so we can know which setting this maps to
 	end -- CheckButton
@@ -77,9 +108,9 @@ function SassAddon.PanelControl(type, name, parent)
     --eb: HookScript("OnClick", SimpleAssist_Checkbox_OnClick);
     -- set the value:
 
-  local current_value = SimpleAssistCharVars[name];
-  current_value = "waffles";
-  SassAddon.unsaved_setting[name] = current_value;
+  local current_value = SassAddon.unsaved_settings[name];
+  -- current_value = "waffles";
+  SassAddon.unsaved_settings[name] = current_value;
   ebx:SetText(current_value);
   ebx:SetCursorPosition(0)
 
