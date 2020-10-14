@@ -15,18 +15,7 @@ function SassAddon.deepcopy(orig)
     end
     return copy
 end
---[[
-function SassAddon.CopyTable(src, dest)
-	for index, value in pairs(src) do
-		if type(value) == "table" then
-			dest[index] = {}
-			SassAddon.CopyTable(value, dest[index])
-		else
-			dest[index] = value
-		end
-	end
-end
---]]
+
 function SassAddon.LoadDefaults()
   SassAddon.unsaved_settings = SassAddon.deepcopy(SimpleAssistCharVars);
 end
@@ -83,6 +72,33 @@ function SassAddon.PanelControl(type, name, parent)
 	end -- CheckButton
 
 
+  if "RadioButton" == type then
+		local cb = CreateFrame(
+			"CheckButton", -- frame type
+			"SASS_CONTROL_" .. name, -- name of newly created frame (can't be nil for our purposes)
+			parent, -- parent frame
+			"SendMailRadioButtonTemplate" -- virtual frame template
+	    -- numberic id of frame
+		);
+		cb:ClearAllPoints();
+		cb:SetPoint(
+			"TOPLEFT", -- point (WoW point name)
+			parent, -- relative frame. maybe change this to the label at some point
+			"TOPLEFT", -- point of relative frame
+			txt.x - 30 , --offset x
+			txt.y + 24 --offset y
+		);
+		cb: HookScript("OnClick", SimpleAssist_Radio_OnClick);
+		-- set the value:
+
+		local current_value = SassAddon.unsaved_settings[name];
+		SassAddon.unsaved_settings[name] = current_value;
+		cb:SetChecked(current_value);
+		cb["SASS_SETTING"] = name; -- so we can know which setting this maps to
+	end -- CheckButton
+
+
+
 	if "EditBox" == type then
 
     local ebx = CreateFrame(
@@ -92,8 +108,7 @@ function SassAddon.PanelControl(type, name, parent)
       "InputBoxTemplate" -- virtual frame template
       -- numberic id of frame
     );
-    ebx:SetSize(110, 20)
-
+    ebx:SetSize(110, 20);
     ebx:ClearAllPoints();
     ebx:SetPoint(
       "TOPLEFT", -- point (WoW point name)
@@ -104,20 +119,14 @@ function SassAddon.PanelControl(type, name, parent)
     );
     ebx:SetAutoFocus(false);
 
-
     --eb: HookScript("OnClick", SimpleAssist_Checkbox_OnClick);
-    -- set the value:
 
-  local current_value = SassAddon.unsaved_settings[name];
-  -- current_value = "waffles";
-  SassAddon.unsaved_settings[name] = current_value;
-  ebx:SetText(current_value);
-  ebx:SetCursorPosition(0)
-
-  --  eb:SetChecked(current_value);
-  --  eb["SASS_SETTING"] = name; -- so we can know which setting this maps to
-  --]]
-	end
+    local current_value = SassAddon.unsaved_settings[name];
+    SassAddon.unsaved_settings[name] = current_value;
+    ebx:SetText(current_value);
+    ebx:SetCursorPosition(0)
+    ebx["SASS_SETTING"] = name; -- so we can know which setting this maps to
+	end --EditBox
 
 end
 

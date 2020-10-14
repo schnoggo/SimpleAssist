@@ -44,7 +44,7 @@ CUSTOM_CALL_AFTER=".",
 
 
 
-RTARGET_HEAD="You can assign a ''Raid Target Icon'' to your current target when requesting assistance. You can select which icon:",
+RTARGET_HEAD="You can assign a \"Raid Target Icon\" to your current target when requesting assistance. You can select which icon:",
 RTARGET0="No Icon",
 RTARGET1="Star",
 RTARGET2="Circle",

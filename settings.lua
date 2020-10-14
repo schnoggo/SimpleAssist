@@ -70,14 +70,7 @@ function SimpleAssist_Options_CreatePanel()
     end
 
 -- The text boxes for messages:
---[[
-CUSTOM_CALL_HEAD="You can customize the message sent in chat when requesting assistance:",
-CUSTOM_CALL_BEFORE="Help ",
-CUSTOM_CALL_PLAYERNAME=UnitName("player"),
-CUSTOM_CALL_MIDDLE=" in attacking ",
-CUSTOM_CALL_MOBNAME="[Target]",
-CUSTOM_CALL_AFTER=".",
---]]
+
     local this_row_y = -200;
     txt.x = 15;
     txt.r = 1;
@@ -86,7 +79,7 @@ CUSTOM_CALL_AFTER=".",
     txt.y = this_row_y;
     SassAddon.PanelColumns(1);
     SassAddon.PanelText(SASSTEXT.CUSTOM_CALL_HEAD);
-    this_row_y = this_row_y +20;
+    this_row_y = this_row_y - 20; -- everything goes one line below the intro text
     txt.y = this_row_y;
     SassAddon.PanelControl('EditBox', 'CUSTOM_CALL_BEFORE');
     txt.r = 1;
@@ -101,6 +94,25 @@ CUSTOM_CALL_AFTER=".",
     txt.y = this_row_y;
     txt.x = 380;
     SassAddon.PanelText(SASSTEXT.CUSTOM_CALL_MOBNAME);
+    txt.y = this_row_y;
+    txt.x = 440;
+    SassAddon.PanelControl('EditBox', 'CUSTOM_CALL_AFTER');
+
+
+
+-- Radio buttons for Raid target icon
+
+txt.x = 15;
+txt.r = 1;
+txt.g = .82;
+txt.b = 0;
+txt.y = -330;
+SassAddon.PanelColumns(1);
+SassAddon.PanelText(SASSTEXT.RTARGET_HEAD);
+local this_row_y = txt.y -20;
+txt.y = this_row_y;
+
+
 
 
 
@@ -171,48 +183,14 @@ function SimpleAssist_Checkbox_OnClick(ef, ...)
   end
 end
 
-
+---
+-- This original version used numbers, we might
+-- be able to use values
 function SimpleAssist_Radio_OnClick(arg1)
 	SimpleAssistSavedVars["SimpleAssistRaidIcon"]=arg1;
 	SimpleAssistUpdateRadios();
 end
 
-
- -- OnShow
- function SimpleAssistPrefsFrameOnShow()
-
-
-	-- draw the current settings:
-	table.foreach(SimpleAssistSavedVars,
-		function(k,v)
-			if (getglobal(k) ~= nil) then
-				if string.find("Text",k) then
-
-				else
-					getglobal(k):SetChecked(v);
-				end
-
-			end
-		end
-
-	);
-	-- fill in the text for the custom chat message:
-	for i = 1,3 do
-		local tMsgName="SimpleAssistChatText"..i;
-		local tMsgText=	SimpleAssistSavedVars["CustomChat"][i];
-		if (tMsgText ~= nil) then
-			getglobal(tMsgName):SetText(tMsgText);
-		end
-	end
-
-	-- draw the radio buttons for Raid Icon
-	if (SimpleAssistSavedVars["SimpleAssistRaidIcon"] == nil) then
-		SimpleAssistSavedVars["SimpleAssistRaidIcon"] = 0;
-	end
-
-	SimpleAssistUpdateRadios();
-
- end
 
 
 
