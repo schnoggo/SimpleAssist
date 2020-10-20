@@ -23,8 +23,36 @@ end
 
 
 ---
+-- Set the panel title and actions
+-- Register with WoW InterfaceOptions
+--
+-- @param frame reference
+-- @tparam text for name of panel
+--
+function SassAddon.RegisterInterfacePanel(frame, panel_title)
+  frame.name = panel_title;
+  frame.refresh = function(self)
+    SassAddon.LoadDefaults(self);
+  end
+  frame.default = function(self)
+    SassAddon.LoadDefaults(self);
+  end
+  frame.okay = function(self)
+    SassAddon.SavePanel(self);
+  end
+  --    SassAddon.panel.cancel = SassAddon.LoadDefaults;
+frame.sass_controls = {}; -- list of controls and their values
+  -- Add the panel to the Interface Options
+  InterfaceOptions_AddCategory(frame);
+
+end
+
+
+
+---
 -- Load the WoW saved variables into our working settings
-function SassAddon.LoadDefaults()
+-- @param table frame issuing this event (not used at this time)
+function SassAddon.LoadDefaults( ef )
   DEFAULT_CHAT_FRAME:AddMessage('LoadDefaults ' );
 
   SassAddon.unsaved_settings = SassAddon.deepcopy(SimpleAssistCharVars);
@@ -32,10 +60,25 @@ end
 
 ---
 -- Save our working settings into the WoW saved variables
-function SassAddon.SavePanel()
+-- @param table frame issuing this event (not used at this time)
+--
+function SassAddon.SavePanel( ef)
   DEFAULT_CHAT_FRAME:AddMessage('SavePanel ' );
-
+  DEFAULT_CHAT_FRAME:AddMessage('SavePanel ' .. ef.name );
+  -- /dump SassAddonPanel.sass_controls
+  -- /dump SassAddon.unsaved_settings
+  -- /run for k in pairs(SassAddon.unsaved_settings) do print(k); end
+  --if nil ~= ef["sass_controls"] then
+    for k,v in pairs(SassAddon.unsaved_settings) do
+      DEFAULT_CHAT_FRAME:AddMessage(': ' .. k );
+      SimpleAssistCharVars[k] = v;
+    end
+--  else
+  --  DEFAULT_CHAT_FRAME:AddMessage('No frame passed ' );
+  --end
 --  SassAddon.unsaved_settings = SassAddon.deepcopy(SimpleAssistCharVars);
+-- SimpleAssistCharVars  = SassAddon.deepcopy(SassAddon.unsaved_settings);
+
 end
 
 ---
@@ -75,10 +118,6 @@ function SassAddon.PanelControl(type, name, parent)
 		parent = txt.parent;
 	end
 
-  if nil == parent["sass_controls"] then -- init the control list for this frame if necessary
-    parent["sass_controls"] = {};
-  end
-
 	if "CheckButton" == type then
 		local cb = CreateFrame(
 			"CheckButton", -- frame type
@@ -102,7 +141,7 @@ function SassAddon.PanelControl(type, name, parent)
     parent.sass_controls[name] = current_value;
 		SassAddon.unsaved_settings[name] = current_value;
 		cb:SetChecked(current_value);
-		cb["SASS_SETTING"] = name; -- so we can know which setting this maps to
+		cb.setting_name = name; -- so we can know which setting this maps to
 
 	end -- CheckButton
 
@@ -130,7 +169,7 @@ function SassAddon.PanelControl(type, name, parent)
 		SassAddon.unsaved_settings[name] = current_value;
     parent.sass_controls[name] = current_value;
 		cb:SetChecked(current_value);
-		cb["SASS_SETTING"] = name; -- so we can know which setting this maps to
+		cb.setting_name = name; -- so we can know which setting this maps to
 	end -- CheckButton
 
 
@@ -162,7 +201,7 @@ function SassAddon.PanelControl(type, name, parent)
     parent.sass_controls[name] = current_value;
     ebx:SetText(current_value);
     ebx:SetCursorPosition(0)
-    ebx["SASS_SETTING"] = name; -- so we can know which setting this maps to
+    ebx.setting_name = name; -- so we can know which setting this maps to
 	end --EditBox
 
 end
@@ -217,9 +256,9 @@ function SassAddon.CheckboxClick(ef, ...)
   if nil ~= ef then
   --	local buttonName=ef:GetName();
     -- skip the "SASS_CONTROL_"
-    local button_name = ef["SASS_SETTING"];
+    local button_name = ef.setting_name;
     local state = ef:GetChecked();
-    SassAddon.unsaved_setting[button_name] = state;
+    SassAddon.unsaved_settings[button_name] = state;
     DEFAULT_CHAT_FRAME:AddMessage('checkbox ' .. button_name .. ': ' .. tostring(state),  1, 1.0, 0.5, 1);
 
 

@@ -84,7 +84,7 @@ function SassAddon.init(event, addon)
 					end
 				end
 			end
-need_to_init = true;
+-- need_to_init = true;
 
 			if (need_to_init) then
 				DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.FIRST_RUN,  0.5, 1.0, 0.5, 1);
