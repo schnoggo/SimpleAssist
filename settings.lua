@@ -5,9 +5,10 @@ function SimpleAssist_Options_CreatePanel()
 
   -- Register in the Interface Addon Options GUI
   SassAddon.panel.name = "SimpleAssist";
-  SassAddon.panel.refresh = "SassAddon.LoadDefaults";
-  SassAddon.panel.default = "SassAddon.LoadDefaults";
-
+  SassAddon.panel.refresh = SassAddon.LoadDefaults;
+  SassAddon.panel.default = SassAddon.LoadDefaults;
+  SassAddon.panel.okay = SassAddon.SavePanel;
+--    SassAddon.panel.cancel = SassAddon.LoadDefaults;
 
   -- Add the panel to the Interface Options
   InterfaceOptions_AddCategory(SassAddon.panel);
@@ -157,54 +158,6 @@ end
 -- Text drawing
 --
 
-
-
--- GUI Handlers:
--- =============================
-
--- prefs:
----
--- Record a setting widget status to the saved vars
-function SimpleAssist_Checkbox_OnClick(ef, ...)
-  if nil ~= ef then
-  --	local buttonName=ef:GetName();
-    -- skip the "SASS_CONTROL_"
-    local button_name = ef["SASS_SETTING"];
-    local state = ef:GetChecked();
-    SassAddon.unsaved_setting[button_name] = state;
-    DEFAULT_CHAT_FRAME:AddMessage('checkbox ' .. button_name .. ': ' .. tostring(state),  1, 1.0, 0.5, 1);
-
-
---[[
-  Only save if they save the results
-  	SimpleAssistDefaults[buttonName] =_G[buttonName]:GetChecked();
-  	SimpleAssistSavedVars[buttonName] =_G[buttonName]:GetChecked();
-    --]]
-  end
-end
-
----
--- This original version used numbers, we might
--- be able to use values
-function SimpleAssist_Radio_OnClick(arg1)
-	SimpleAssistSavedVars["SimpleAssistRaidIcon"]=arg1;
-	SimpleAssistUpdateRadios();
-end
-
-
-
-
-function SimpleAssistUpdateRadios()
-  i=0;
-	while (i<9) do
-		if (i==SimpleAssistSavedVars["SimpleAssistRaidIcon"]) then
-  		getglobal("SimpleAssist_RB"..i):SetChecked(true);
-		else
-			getglobal("SimpleAssist_RB"..i):SetChecked(false);
-		end
-		i=i+1;
-	end
-end
 
 
 
