@@ -85,7 +85,7 @@ function SassAddon.init(event, addon)
 					end
 				end
 			end
- need_to_init = true;
+ -- need_to_init = true;
 
 			if (need_to_init) then
 				DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.FIRST_RUN,  0.5, 1.0, 0.5, 1);
@@ -105,6 +105,18 @@ function SassAddon.init(event, addon)
 			SassAddon.eventframe = CreateFrame("Frame" ); -- the frame to listen to all our events
 			local ev = SassAddon.eventframe; -- local shortcut
 
+			local f =  CreateFrame("CheckButton", "SimpleAssistActionButton", UIParent, "ActionBarButtonTemplate");
+
+			f:SetAttribute("type", "macro");
+			f:SetAttribute("width", "30");
+			f:SetAttribute("height", "30");
+			f:SetAttribute("macrotext", "/assist target");
+			f:ClearAllPoints();
+			f:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", 50, 50); -- (point, frame, relativePoint , x, y);
+			-- putting the button off-screen to make it invisible
+			-- f:SetPoint("BOTTOMRIGHT", "UIParent", "TOPLEFT", 2, -2); -- (point, frame, relativePoint , x, y);
+
+
 			-- and register our basic events:
 			ev:RegisterEvent("PLAYER_ENTERING_WORLD");
 			ev:RegisterEvent("CHAT_MSG_CHANNEL");
@@ -115,6 +127,11 @@ function SassAddon.init(event, addon)
 
 			-- self:RegisterEvent("CHAT_MSG_TEXT_EMOTE"); -- for listening
 			ev:SetScript("OnEvent", SassAddon.HandleEvent);
+
+			-- Set up our display frame:
+	--		SassAddon.alert = CreateFrame("MessageFrame", "SimpleAssistAlertFrame", UIParent );
+		--	SassAddon.alert.
+
 
 			-- Set up the preference panel:
 			SimpleAssist_Options_CreatePanel();
@@ -155,11 +172,11 @@ end
 			-- replace with code that uses player name instead of unitID
 
 			if (SassAddon.pending_learn == "pending clear") then
-				getglobal("SimpleAssistActionButton"):SetAttribute("macrotext", "/assist target");
+				_G["SimpleAssistActionButton"]:SetAttribute("macrotext", "/assist target");
 				SimpleAssist_PopMsg(SASSTEXT.CLEARED);
 			else
 				-- expand the macro code here
-				getglobal("SimpleAssistActionButton"):SetAttribute("macrotext", "/assist "..SassAddon.pending_learn);
+				_G["SimpleAssistActionButton"]:SetAttribute("macrotext", "/assist "..SassAddon.pending_learn);
 				SimpleAssist_PopMsg(SASSTEXT.ASSIST_SET ..": " .. SassAddon.pending_learn);
 			end
 			SassAddon.pending_learn = nil;
@@ -181,11 +198,11 @@ end -- end of function
 
 
 function SimpleAssist_UpdateBindings()
- if getglobal("SimpleAssistActionButton") then
+ if _G["SimpleAssistActionButton"] then
 			local k1, k2, k3 = GetBindingKey("SASS_ASSIST");
 				if (k1) then -- SetOverrideBindingClick(owner, isPriority, "KEY", "ButtoName"[,"mouseButton"]);
 				-- DEFAULT_CHAT_FRAME:AddMessage("SASS key="..k1,  0.5, 1.0, 0.5, 1);
-				SetOverrideBindingClick(getglobal("SimpleAssistActionButton"),nil,k1,"SimpleAssistActionButton");
+				SetOverrideBindingClick(_G["SimpleAssistActionButton"],nil,k1,"SimpleAssistActionButton");
 			end
 		end -- button instantiated
 end
@@ -230,7 +247,7 @@ function SimpleAssist_PrivateLearnAssist(unit)
 --     if no unit, clear the remembered "assistee"
 
 	if (UnitName(unit) == nil) then
-		getglobal("SimpleAssistActionButton"):SetAttribute("macrotext", "/assist target");
+		_G["SimpleAssistActionButton"]:SetAttribute("macrotext", "/assist target");
 		SimpleAssist_PopMsg(SASSTEXT.CLEARED);
 	end
 
@@ -243,7 +260,7 @@ function SimpleAssist_PrivateLearnAssist(unit)
 				-- check for modifier to use
 				-- /use [nomodifier, nomounted]Snowy Gryphon;
 				-- /use [modifier:alt]Palomino Bridle;
-				getglobal("SimpleAssistActionButton"):SetAttribute("macrotext", "/assist "..thisUnitName);
+				_G["SimpleAssistActionButton"]:SetAttribute("macrotext", "/assist "..thisUnitName);
 				SimpleAssist_PopMsg(SASSTEXT.ASSIST_SET ..": " .. thisUnitName);
 		end -- friend
 	end -- player
@@ -260,9 +277,9 @@ function  SimpleAssist_AskAssist()
 		-- string.gsub(s, pattern, replace [, n])
 		-- msg=string.gsub(msg, "{name}", myPlayerName );
 		-- msg=string.gsub(msg, "{target}", target_name );
-		local p1=SimpleAssistCharVars["CustomChat"][1];
-		local p2=SimpleAssistCharVars["CustomChat"][2];
-		local p3=SimpleAssistCharVars["CustomChat"][3];
+		local p1=SimpleAssistCharVars["CUSTOM_CALL_BEFORE"];
+		local p2=SimpleAssistCharVars["CUSTOM_CALL_MIDDLE"];
+		local p3=SimpleAssistCharVars["CUSTOM_CALL_AFTER"];
 
 		-- format the message:
 		if (p1 ~= "") then
@@ -314,8 +331,9 @@ function  SimpleAssist_AskAssist()
 				DoEmote("ATTACKMYTARGET");
 			end
 
-			if (SimpleAssistCharVars["SimpleAssistRaidIcon"] ~= 0) then
-				SetRaidTarget("target",SimpleAssistCharVars["SimpleAssistRaidIcon"]);
+			if (SimpleAssistCharVars.RAID_ICON ~= 0) then
+				local icon_number = tonumber(strsub(SimpleAssistCharVars.RAID_ICON, -1));
+				SetRaidTarget("target",icon_number);
 			end
 
 
