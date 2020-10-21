@@ -54,6 +54,7 @@ boot_frame:SetScript(
 		CUSTOM_CALL_BEFORE = SASSTEXT.CUSTOM_CALL_BEFORE,
 		CUSTOM_CALL_MIDDLE = SASSTEXT.CUSTOM_CALL_MIDDLE,
 		CUSTOM_CALL_AFTER =	'.',
+		RAID_ICON = 'RTARGET0',
 		version = 4
 	};
 
@@ -84,7 +85,7 @@ function SassAddon.init(event, addon)
 					end
 				end
 			end
--- need_to_init = true;
+ need_to_init = true;
 
 			if (need_to_init) then
 				DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.FIRST_RUN,  0.5, 1.0, 0.5, 1);

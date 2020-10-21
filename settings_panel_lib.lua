@@ -154,20 +154,25 @@ function SassAddon.PanelControl(type, name, parent)
 			"SendMailRadioButtonTemplate" -- virtual frame template
 	    -- numberic id of frame
 		);
+    DEFAULT_CHAT_FRAME:AddMessage('radio ' .. name );
+
 		cb:ClearAllPoints();
 		cb:SetPoint(
 			"TOPLEFT", -- point (WoW point name)
 			parent, -- relative frame. maybe change this to the label at some point
 			"TOPLEFT", -- point of relative frame
-			txt.x - 30 , --offset x
-			txt.y + 24 --offset y
+			txt.x - 20 , --offset x
+			txt.y + 22 --offset y
 		);
-		cb: HookScript("OnClick", SimpleAssist_Radio_OnClick);
+		cb: HookScript("OnClick", SassAddon.RadioOnClick);
 		-- set the value:
+    local selected_radio = SassAddon.unsaved_settings.RAID_ICON;
+    current_value = false;
+    if selected_radio == name then
+      current_value = true;
+      parent.sass_controls.RAID_ICON = name;
+    end
 
-		local current_value = SassAddon.unsaved_settings[name];
-		SassAddon.unsaved_settings[name] = current_value;
-    parent.sass_controls[name] = current_value;
 		cb:SetChecked(current_value);
 		cb.setting_name = name; -- so we can know which setting this maps to
 	end -- CheckButton
@@ -273,9 +278,15 @@ end
 ---
 -- This original version used numbers, we might
 -- be able to use values
-function SassAddon.RadioOnClick(arg1)
-	SimpleAssistSavedVars["SimpleAssistRaidIcon"]=arg1;
-	SimpleAssistUpdateRadios();
+function SassAddon.RadioOnClick(ef)
+
+  if nil ~= ef then
+    local button_name = ef.setting_name;
+    local state = ef:GetChecked();
+    SassAddon.unsaved_settings.selected_radio = button_name;
+    DEFAULT_CHAT_FRAME:AddMessage('checkbox ' .. button_name .. ': ' .. tostring(state),  1, 1.0, 0.5, 1);
+	  SassAddon.UpdateRadios();
+  end
 end
 
 
@@ -284,10 +295,13 @@ end
 function SassAddon.UpdateRadios()
   i=0;
 	while (i<9) do
-		if (i==SimpleAssistSavedVars["SimpleAssistRaidIcon"]) then
-  		getglobal("SimpleAssist_RB"..i):SetChecked(true);
+
+    local o_radio = _G["SASS_CONTROL_" .. "RTARGET" .. i];
+		if "RTARGET" .. i == SassAddon.unsaved_settings.selected_radio then
+
+  		o_radio:SetChecked(true);
 		else
-			getglobal("SimpleAssist_RB"..i):SetChecked(false);
+			o_radio:SetChecked(false);
 		end
 		i=i+1;
 	end

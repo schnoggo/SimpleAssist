@@ -50,8 +50,6 @@ function SimpleAssist_Options_CreatePanel()
     for _,  emote_type in ipairs(emote_types) do -- emote_type is automatically local
       -- Draw the label:
       SassAddon.PanelText(SASSTEXT[emote_type]);
-
-
       SassAddon.PanelControl('CheckButton', emote_type); -- "SASS_" is prepended to name
       txt.y = txt.y + line_vspace;
       items_in_col = items_in_col +1;
@@ -104,6 +102,33 @@ SassAddon.PanelColumns(1);
 SassAddon.PanelText(SASSTEXT.RTARGET_HEAD);
 local this_row_y = txt.y -20;
 txt.y = this_row_y;
+max_per_col = 4;
+items_in_col = 0;
+top_of_block = txt.y;
+
+local radio_setting ;
+local radio_text;
+
+txt.x = 55;
+  for i=0, 8, 1 do
+  -- Draw the label:
+    radio_setting = "RTARGET" .. i;
+    -- if i > 0 then
+    --  radio_text = SASSTEXT[radio_setting] .. " |TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. i .. "|t";
+    --else
+      radio_text = SASSTEXT[radio_setting];
+    -- end
+    SassAddon.PanelText(radio_text);
+    SassAddon.PanelControl('RadioButton', radio_setting); -- "SASS_" is prepended to name
+    txt.y = txt.y + line_vspace;
+    items_in_col = items_in_col +1;
+    if items_in_col >= max_per_col then -- step over to the second column
+      items_in_col = 0;
+      txt.y = top_of_block;
+      txt.x = txt.x + SASSTEXT.COLWIDTH;
+      max_per_col = 99; -- don't wrap next column
+    end
+  end
 
 
 
