@@ -167,16 +167,13 @@ end
 
 
 	if (eventHandled == false and ((event == "PLAYER_LEAVE_COMBAT") or (event == "PLAYER_REGEN_ENABLED"))) then
-		if (SassAddon.pending_learn ~= nil) then
-			-- SimpleAssist_PrivateLearnAssist(SassAddon.pending_learn);
-			-- replace with code that uses player name instead of unitID
-
-			if (SassAddon.pending_learn == "pending clear") then
-				_G["SimpleAssistActionButton"]:SetAttribute("macrotext", "/assist target");
+		if (SassAddon.pending_learn ~= nil) then -- we have a "learn" pending from combat
+			if ("pending clear" == SassAddon.pending_learn) then
+				SimpleAssistActionButton:SetAttribute("macrotext", "/assist target");
 				SimpleAssist_PopMsg(SASSTEXT.CLEARED);
 			else
 				-- expand the macro code here
-				_G["SimpleAssistActionButton"]:SetAttribute("macrotext", "/assist "..SassAddon.pending_learn);
+				SimpleAssistActionButton:SetAttribute("macrotext", "/assist " .. SassAddon.pending_learn);
 				SimpleAssist_PopMsg(SASSTEXT.ASSIST_SET ..": " .. SassAddon.pending_learn);
 			end
 			SassAddon.pending_learn = nil;
@@ -198,13 +195,18 @@ end -- end of function
 
 
 function SimpleAssist_UpdateBindings()
- if _G["SimpleAssistActionButton"] then
-			local k1, k2, k3 = GetBindingKey("SASS_ASSIST");
-				if (k1) then -- SetOverrideBindingClick(owner, isPriority, "KEY", "ButtoName"[,"mouseButton"]);
-				-- DEFAULT_CHAT_FRAME:AddMessage("SASS key="..k1,  0.5, 1.0, 0.5, 1);
-				SetOverrideBindingClick(_G["SimpleAssistActionButton"],nil,k1,"SimpleAssistActionButton");
+ if nil ~= SimpleAssistActionButton then
+			local key1, key2 = GetBindingKey("Assist Learned Player");
+				if (key1) then -- SetOverrideBindingClick(owner, isPriority, "KEY", "ButtoName"[,"mouseButton"]);
+					DEFAULT_CHAT_FRAME:AddMessage("SASS key="..key1,  0.5, 1.0, 0.5, 1);
+					SetOverrideBindingClick(
+						SassAddon.eventframe, -- owner frame
+						false, -- isPriority, even false is higher than normal bindings
+						key1,
+						"SimpleAssistActionButton" -- buttonName
+					);
 			end
-		end -- button instantiated
+		end -- button has been instantiated
 end
 
 function SimpleAssistTester()
@@ -222,8 +224,11 @@ end
 
 -- In Game Functions:
 
-function  SimpleAssist_LearnAssist(unit)
+---
+-- "Learn" the current target as the unit to assist
 -- {unit} = ID of unit to be set as assist (from Target)
+--
+function  SimpleAssist_LearnAssist(unit)
 
 	if (InCombatLockdown()) then
 		local thisUnitName=UnitName(unit);
@@ -237,17 +242,18 @@ function  SimpleAssist_LearnAssist(unit)
 	else
 		SimpleAssist_PrivateLearnAssist(unit);
 	end
-
 end -- function
 
 
+---
+-- The actual function to learn the unit to assist
+-- Since this can't be called during combat,
+-- it will be called by SimpleAssist_LearnAssist
+-- @param  unit to remember. if no unit, clear the remembered "assistee"
 function SimpleAssist_PrivateLearnAssist(unit)
--- inputs
---     unit to remember
---     if no unit, clear the remembered "assistee"
 
 	if (UnitName(unit) == nil) then
-		_G["SimpleAssistActionButton"]:SetAttribute("macrotext", "/assist target");
+		SimpleAssistActionButton:SetAttribute("macrotext", "/assist target");
 		SimpleAssist_PopMsg(SASSTEXT.CLEARED);
 	end
 
@@ -260,7 +266,7 @@ function SimpleAssist_PrivateLearnAssist(unit)
 				-- check for modifier to use
 				-- /use [nomodifier, nomounted]Snowy Gryphon;
 				-- /use [modifier:alt]Palomino Bridle;
-				_G["SimpleAssistActionButton"]:SetAttribute("macrotext", "/assist "..thisUnitName);
+				SimpleAssistActionButton:SetAttribute("macrotext", "/assist "..thisUnitName);
 				SimpleAssist_PopMsg(SASSTEXT.ASSIST_SET ..": " .. thisUnitName);
 		end -- friend
 	end -- player
