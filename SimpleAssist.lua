@@ -278,18 +278,18 @@ function  SimpleAssist_AskAssist()
 	local myPlayer = SassAddon.myPlayer;
 	local target_name=UnitName("target");
 
-	if (target_name ~= nil) then -- only ask for help if there is a target
+	if (nil ~= target_name ) then -- only ask for help if there is a target
 		-- local msg = SASSTEXT.CHAT_ASSIST;
 		-- string.gsub(s, pattern, replace [, n])
 		-- msg=string.gsub(msg, "{name}", myPlayerName );
 		-- msg=string.gsub(msg, "{target}", target_name );
-		local p1=SimpleAssistCharVars["CUSTOM_CALL_BEFORE"];
-		local p2=SimpleAssistCharVars["CUSTOM_CALL_MIDDLE"];
-		local p3=SimpleAssistCharVars["CUSTOM_CALL_AFTER"];
+		local before = SimpleAssistCharVars["CUSTOM_CALL_BEFORE"];
+		local middle = SimpleAssistCharVars["CUSTOM_CALL_MIDDLE"];
+		local after =SimpleAssistCharVars["CUSTOM_CALL_AFTER"];
 
 		-- format the message:
-		if (p1 ~= "") then
-			p1=p1.." ";
+		if ("" ~= before and "" ~= before) then
+			before = before .. " ";
 		end
 		-- if (p2 ~= "") then
 			-- p2=" "..p2.." ";
@@ -297,48 +297,55 @@ function  SimpleAssist_AskAssist()
 		-- if (p3 ~= "") then
 			-- p3=" "..p3;
 		-- end
-		local msg = p1 .. myPlayer.name .. p2 .. target_name .. p3;
+		local msg = before .. myPlayer.name .. middle .. target_name .. after;
+		DEFAULT_CHAT_FRAME:AddMessage("Ask assist: " .. msg ,  0.5, 1.0, 0.5, 1);
 
 		-- tell it to the world (or party, or raid...)
+
+
 		if (IsInGroup()) then
+			local raid_icon_num = 0;
+			if (nil ~= SimpleAssistCharVars.RAID_ICON ) then
+				raid_icon_num = tonumber(strsub(SimpleAssistCharVars.RAID_ICON, -1));
+			end
+
 			if (IsInRaid()) then
-				if (SimpleAssistCharVars["SimpleAssistPrefsRAID"]) then
+				if (SimpleAssistCharVars.CHAT_RAID) then
 					SendChatMessage(msg, "RAID");
 				end
 
-				if (SimpleAssistCharVars["SimpleAssistPrefsRW"]) then
+				if (SimpleAssistCharVars.CHAT_RW) then
 					SendChatMessage(msg, "RAID_WARNING");
 				end
 
-				if (SimpleAssistCharVars["SimpleAssistRaidIcon"] ~= 0) then
-					SetRaidTarget("target",SimpleAssistCharVars["SimpleAssistRaidIcon"]);
+				if 0 ~= raid_icon_num then
+					SetRaidTarget("target",raid_icon_num);
 				end
 
 			else -- not raid, just party
 
-				if (SimpleAssistCharVars["SimpleAssistPrefsPARTY"] ) then
+				if (SimpleAssistCharVars.CHAT_PARTY) then
 					SendChatMessage(msg, "PARTY");
 				end
 
-				if (SimpleAssistCharVars["SimpleAssistRaidIcon"] ~= 0) then
-					SetRaidTarget("target",SimpleAssistCharVars["SimpleAssistRaidIcon"]);
+				if 0 ~= raid_icon_num then
+					SetRaidTarget("target",raid_icon_num);
 				end
 			end -- party
 
 		else -- not in a group, so only yell, say or emote
-			if (SimpleAssistCharVars["SimpleAssistPrefsYELL"]) then
+			if (SimpleAssistCharVars.CHAT_YELL) then
 				SendChatMessage(msg, "YELL");
 			end
-			if (SimpleAssistCharVars["SimpleAssistPrefsSAY"]) then
+			if (SimpleAssistCharVars.CHAT_SAY) then
 				SendChatMessage(msg, "SAY");
 			end
 
-			if (SimpleAssistCharVars["SimpleAssistPrefsEMOTE"]) then
+			if (SimpleAssistCharVars.CHAT_EMOTE) then
 				DoEmote("ATTACKMYTARGET");
 			end
 
 			if (SimpleAssistCharVars.RAID_ICON ~= 0) then
-				local icon_number = tonumber(strsub(SimpleAssistCharVars.RAID_ICON, -1));
 				SetRaidTarget("target",icon_number);
 			end
 
