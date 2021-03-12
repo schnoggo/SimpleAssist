@@ -53,8 +53,6 @@ end
 -- Load the WoW saved variables into our working settings
 -- @param table frame issuing this event (not used at this time)
 function SassAddon.LoadDefaults( ef )
-  DEFAULT_CHAT_FRAME:AddMessage('LoadDefaults ' );
-
   SassAddon.unsaved_settings = SassAddon.deepcopy(SimpleAssistCharVars);
 end
 
@@ -63,14 +61,11 @@ end
 -- @param table frame issuing this event (not used at this time)
 --
 function SassAddon.SavePanel( ef)
-  DEFAULT_CHAT_FRAME:AddMessage('SavePanel ' );
-  DEFAULT_CHAT_FRAME:AddMessage('SavePanel ' .. ef.name );
   -- /dump SassAddonPanel.sass_controls
   -- /dump SassAddon.unsaved_settings
   -- /run for k in pairs(SassAddon.unsaved_settings) do print(k); end
   --if nil ~= ef["sass_controls"] then
     for k,v in pairs(SassAddon.unsaved_settings) do
-      DEFAULT_CHAT_FRAME:AddMessage(': ' .. k );
       SimpleAssistCharVars[k] = v;
     end
 --  else
@@ -154,7 +149,6 @@ function SassAddon.PanelControl(type, name, parent)
 			"SendMailRadioButtonTemplate" -- virtual frame template
 	    -- numberic id of frame
 		);
-    DEFAULT_CHAT_FRAME:AddMessage('radio ' .. name );
 
 		cb:ClearAllPoints();
 		cb:SetPoint(
@@ -264,7 +258,7 @@ function SassAddon.CheckboxClick(ef, ...)
     local button_name = ef.setting_name;
     local state = ef:GetChecked();
     SassAddon.unsaved_settings[button_name] = state;
-    DEFAULT_CHAT_FRAME:AddMessage('checkbox ' .. button_name .. ': ' .. tostring(state),  1, 1.0, 0.5, 1);
+  --  DEFAULT_CHAT_FRAME:AddMessage('checkbox ' .. button_name .. ': ' .. tostring(state),  1, 1.0, 0.5, 1);
 
 
 --[[
@@ -284,7 +278,7 @@ function SassAddon.RadioOnClick(ef)
     local button_name = ef.setting_name;
     local state = ef:GetChecked();
     SassAddon.unsaved_settings.selected_radio = button_name;
-    DEFAULT_CHAT_FRAME:AddMessage('checkbox ' .. button_name .. ': ' .. tostring(state),  1, 1.0, 0.5, 1);
+    -- DEFAULT_CHAT_FRAME:AddMessage('checkbox ' .. button_name .. ': ' .. tostring(state),  1, 1.0, 0.5, 1);
 	  SassAddon.UpdateRadios();
   end
 end

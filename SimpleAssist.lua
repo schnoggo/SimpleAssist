@@ -68,7 +68,7 @@ function SassAddon.init(event, addon)
 	local myPlayer = SassAddon.myPlayer; -- local shortcut
 	local need_to_init = false;
 	if event == "ADDON_LOADED" and addon == "SimpleAssist" then
-		DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.WELCOME,  0.5, 1.0, 0.5, 1); -- leave for testing
+	--	DEFAULT_CHAT_FRAME:AddMessage(SASSTEXT.WELCOME,  0.5, 1.0, 0.5, 1); -- leave for testing
 
 		if ( false == SassAddon.addon_loaded ) then -- only need to load once
 			SassAddon.addon_loaded = true;
@@ -142,7 +142,7 @@ end
 
 --- Main WoW Event handler
  function SassAddon.HandleEvent(frame, event, ...)
-	DEFAULT_CHAT_FRAME:AddMessage('event ' .. event,  0.5, 1.0, 0.5, 1);
+--	DEFAULT_CHAT_FRAME:AddMessage('event ' .. event,  0.5, 1.0, 0.5, 1);
 	local eventHandled = false;
 	local inParty, unitID;
 	local myPlayer = SassAddon.myPlayer;
@@ -198,7 +198,6 @@ function SimpleAssist_UpdateBindings()
  if nil ~= SimpleAssistActionButton then
 			local key1, key2 = GetBindingKey("Assist Learned Player");
 				if (key1) then -- SetOverrideBindingClick(owner, isPriority, "KEY", "ButtoName"[,"mouseButton"]);
-					DEFAULT_CHAT_FRAME:AddMessage("SASS key="..key1,  0.5, 1.0, 0.5, 1);
 					SetOverrideBindingClick(
 						SassAddon.eventframe, -- owner frame
 						false, -- isPriority, even false is higher than normal bindings
@@ -291,16 +290,13 @@ function  SimpleAssist_AskAssist()
 		if ("" ~= before and "" ~= before) then
 			before = before .. " ";
 		end
-		-- if (p2 ~= "") then
-			-- p2=" "..p2.." ";
-		-- end
-		-- if (p3 ~= "") then
-			-- p3=" "..p3;
-		-- end
-		local msg = before .. myPlayer.name .. middle .. target_name .. after;
-		DEFAULT_CHAT_FRAME:AddMessage("Ask assist: " .. msg ,  0.5, 1.0, 0.5, 1);
 
-		-- tell it to the world (or party, or raid...)
+		if ("" ~= middle and "" ~= middle) then
+			middle = middle .. " ";
+		end
+
+		local msg = before .. myPlayer.name .. middle .. target_name .. after;
+		--DEFAULT_CHAT_FRAME:AddMessage("Ask assist: " .. msg ,  0.5, 1.0, 0.5, 1);
 
 
 		if (IsInGroup()) then
