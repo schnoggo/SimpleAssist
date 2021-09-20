@@ -1,4 +1,4 @@
-SimpleAssist v4.02
+SimpleAssist v4.03
 
 Description
 ===========
@@ -37,9 +37,13 @@ Known Issues
 
 Versions
 ========
+
+4.03 Sep 20, 2021
+  * Updated TOC and verion for WoW client 9.1
+
 4.02 March 12, 2021
   * Updated TOC and verion for WoW client 9.05
-  
+
 4.01 November 17, 2020
   * Updated TOC and version for WoW client 9.02 (Shadowlands)
 
