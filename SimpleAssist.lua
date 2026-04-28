@@ -24,6 +24,19 @@ SassAddon = {
 	unsaved_setting = {}
 };
 
+local function SimpleAssist_SetAssistButtonTarget(targetName)
+	if (nil == SimpleAssistActionButton) then
+		return;
+	end
+
+	SimpleAssistActionButton:SetAttribute("type", "macro");
+	if (targetName == nil) then
+		SimpleAssistActionButton:SetAttribute("macrotext", "/assist target");
+	else
+		SimpleAssistActionButton:SetAttribute("macrotext", "/assist " .. targetName);
+	end
+end
+
 
 -- boot frame:
 local boot_frame = CreateFrame("Frame")
@@ -105,16 +118,13 @@ function SassAddon.init(event, addon)
 			SassAddon.eventframe = CreateFrame("Frame" ); -- the frame to listen to all our events
 			local ev = SassAddon.eventframe; -- local shortcut
 
-			local f =  CreateFrame("CheckButton", "SimpleAssistActionButton", UIParent, "ActionBarButtonTemplate");
+			local f = CreateFrame("Button", "SimpleAssistActionButton", UIParent, "SecureActionButtonTemplate");
 
-			f:SetAttribute("type", "macro");
-			f:SetAttribute("width", "30");
-			f:SetAttribute("height", "30");
-			f:SetAttribute("macrotext", "/assist target");
-			f:ClearAllPoints();
-			f:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", 50, 50); -- (point, frame, relativePoint , x, y);
-			-- putting the button off-screen to make it invisible
-			-- f:SetPoint("BOTTOMRIGHT", "UIParent", "TOPLEFT", 2, -2); -- (point, frame, relativePoint , x, y);
+			f:SetSize(1, 1);
+			f:RegisterForClicks("AnyUp", "AnyDown");
+			f:SetAttribute("useOnKeyDown", false);
+			f:Hide();
+			SimpleAssist_SetAssistButtonTarget(nil);
 
 
 			-- and register our basic events:
@@ -169,11 +179,10 @@ end
 	if (eventHandled == false and ((event == "PLAYER_LEAVE_COMBAT") or (event == "PLAYER_REGEN_ENABLED"))) then
 		if (SassAddon.pending_learn ~= nil) then -- we have a "learn" pending from combat
 			if ("pending clear" == SassAddon.pending_learn) then
-				SimpleAssistActionButton:SetAttribute("macrotext", "/assist target");
+				SimpleAssist_SetAssistButtonTarget(nil);
 				SimpleAssist_PopMsg(SASSTEXT.CLEARED);
 			else
-				-- expand the macro code here
-				SimpleAssistActionButton:SetAttribute("macrotext", "/assist " .. SassAddon.pending_learn);
+				SimpleAssist_SetAssistButtonTarget(SassAddon.pending_learn);
 				SimpleAssist_PopMsg(SASSTEXT.ASSIST_SET ..": " .. SassAddon.pending_learn);
 			end
 			SassAddon.pending_learn = nil;
@@ -196,6 +205,7 @@ end -- end of function
 
 function SimpleAssist_UpdateBindings()
  if nil ~= SimpleAssistActionButton then
+			ClearOverrideBindings(SassAddon.eventframe);
 			local key1, key2 = GetBindingKey("Assist Learned Player");
 				if (key1) then -- SetOverrideBindingClick(owner, isPriority, "KEY", "ButtoName"[,"mouseButton"]);
 					SetOverrideBindingClick(
@@ -203,6 +213,15 @@ function SimpleAssist_UpdateBindings()
 						false, -- isPriority, even false is higher than normal bindings
 						key1,
 						"SimpleAssistActionButton" -- buttonName
+					);
+				end
+
+				if (key2) then
+					SetOverrideBindingClick(
+						SassAddon.eventframe,
+						false,
+						key2,
+						"SimpleAssistActionButton"
 					);
 			end
 		end -- button has been instantiated
@@ -252,7 +271,7 @@ end -- function
 function SimpleAssist_PrivateLearnAssist(unit)
 
 	if (UnitName(unit) == nil) then
-		SimpleAssistActionButton:SetAttribute("macrotext", "/assist target");
+		SimpleAssist_SetAssistButtonTarget(nil);
 		SimpleAssist_PopMsg(SASSTEXT.CLEARED);
 	end
 
@@ -265,7 +284,7 @@ function SimpleAssist_PrivateLearnAssist(unit)
 				-- check for modifier to use
 				-- /use [nomodifier, nomounted]Snowy Gryphon;
 				-- /use [modifier:alt]Palomino Bridle;
-				SimpleAssistActionButton:SetAttribute("macrotext", "/assist "..thisUnitName);
+				SimpleAssist_SetAssistButtonTarget(thisUnitName);
 				SimpleAssist_PopMsg(SASSTEXT.ASSIST_SET ..": " .. thisUnitName);
 		end -- friend
 	end -- player
