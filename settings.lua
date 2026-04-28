@@ -2,14 +2,12 @@ function SimpleAssist_Options_CreatePanel()
   local line_vspace;
   SassAddon.LoadDefaults();
   SassAddon.panel = CreateFrame( "Frame", "SassAddonPanel", UIParent );
-  SassAddon.RegisterInterfacePanel(SassAddon.panel, "SimpleAssist")
+  local main_category = SassAddon.RegisterInterfacePanel(SassAddon.panel, "SimpleAssist");
 
 
   -- child panels:
   SassAddon.panel2 = CreateFrame( "Frame", "SassAddonInfo", UIParent );
-  SassAddon.panel2.name = "Information";
-  SassAddon.panel2.parent = SassAddon.panel.name;
-  InterfaceOptions_AddCategory(SassAddon.panel2);
+  SassAddon.RegisterInterfaceSubPanel(SassAddon.panel2, "Information", main_category, SassAddon.panel);
 
   local txt = SassAddon.txt; -- make a shorter reference
 

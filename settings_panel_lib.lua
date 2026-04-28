@@ -42,8 +42,36 @@ function SassAddon.RegisterInterfacePanel(frame, panel_title)
   end
   --    SassAddon.panel.cancel = SassAddon.LoadDefaults;
 frame.sass_controls = {}; -- list of controls and their values
+
+  if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
+    local category = Settings.RegisterCanvasLayoutCategory(frame, panel_title);
+    Settings.RegisterAddOnCategory(category);
+    if Settings.SetKeybindingsCategory then
+      Settings.SetKeybindingsCategory(category);
+    end
+    frame.category = category;
+    return category;
+  end
+
   -- Add the panel to the Interface Options
   InterfaceOptions_AddCategory(frame);
+
+  return frame;
+
+end
+
+function SassAddon.RegisterInterfaceSubPanel(frame, panel_title, parent_category, parent_frame)
+  frame.name = panel_title;
+  frame.parent = parent_frame and parent_frame.name or nil;
+  frame.sass_controls = {};
+
+  if Settings and Settings.RegisterCanvasLayoutSubcategory and parent_category then
+    frame.category = Settings.RegisterCanvasLayoutSubcategory(parent_category, frame, panel_title);
+    return frame.category;
+  end
+
+  InterfaceOptions_AddCategory(frame);
+  return frame;
 
 end
 
