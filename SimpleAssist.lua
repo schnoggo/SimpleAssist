@@ -121,9 +121,11 @@ function SassAddon.init(event, addon)
 			local f = CreateFrame("Button", "SimpleAssistActionButton", UIParent, "SecureActionButtonTemplate");
 
 			f:SetSize(1, 1);
+			f:ClearAllPoints();
+			f:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", 2, -2);
 			f:RegisterForClicks("AnyUp", "AnyDown");
 			f:SetAttribute("useOnKeyDown", false);
-			f:Hide();
+			f:Show();
 			SimpleAssist_SetAssistButtonTarget(nil);
 
 
