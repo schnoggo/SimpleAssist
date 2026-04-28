@@ -31,11 +31,17 @@ end
 --
 function SassAddon.RegisterInterfacePanel(frame, panel_title)
   frame.name = panel_title;
+  frame:HookScript("OnShow", function(self)
+    SassAddon.LoadDefaults(self);
+    SassAddon.RefreshPanelControls(self);
+  end);
   frame.refresh = function(self)
     SassAddon.LoadDefaults(self);
+    SassAddon.RefreshPanelControls(self);
   end
   frame.default = function(self)
     SassAddon.LoadDefaults(self);
+    SassAddon.RefreshPanelControls(self);
   end
   frame.okay = function(self)
     SassAddon.SavePanel(self);
@@ -64,6 +70,10 @@ function SassAddon.RegisterInterfaceSubPanel(frame, panel_title, parent_category
   frame.name = panel_title;
   frame.parent = parent_frame and parent_frame.name or nil;
   frame.sass_controls = {};
+  frame:HookScript("OnShow", function(self)
+    SassAddon.LoadDefaults(self);
+    SassAddon.RefreshPanelControls(self);
+  end);
 
   if Settings and Settings.RegisterCanvasLayoutSubcategory and parent_category then
     frame.category = Settings.RegisterCanvasLayoutSubcategory(parent_category, frame, panel_title);
@@ -82,6 +92,28 @@ end
 -- @param table frame issuing this event (not used at this time)
 function SassAddon.LoadDefaults( ef )
   SassAddon.unsaved_settings = SassAddon.deepcopy(SimpleAssistCharVars);
+end
+
+function SassAddon.SaveSetting(name, value)
+  SassAddon.unsaved_settings[name] = value;
+  SimpleAssistCharVars[name] = value;
+end
+
+function SassAddon.RefreshPanelControls(frame)
+  if nil == frame or nil == frame.sass_controls then
+    return;
+  end
+
+  for _, control in pairs(frame.sass_controls) do
+    if control.control_type == "CheckButton" then
+      control:SetChecked(SassAddon.unsaved_settings[control.setting_name]);
+    elseif control.control_type == "RadioButton" then
+      control:SetChecked(SassAddon.unsaved_settings.RAID_ICON == control.setting_name);
+    elseif control.control_type == "EditBox" then
+      control:SetText(SassAddon.unsaved_settings[control.setting_name] or "");
+      control:SetCursorPosition(0);
+    end
+  end
 end
 
 ---
@@ -161,7 +193,8 @@ function SassAddon.PanelControl(type, name, parent)
 		-- set the value:
 
 		local current_value = SassAddon.unsaved_settings[name];
-    parent.sass_controls[name] = current_value;
+    cb.control_type = type;
+    parent.sass_controls[name] = cb;
 		SassAddon.unsaved_settings[name] = current_value;
 		cb:SetChecked(current_value);
 		cb.setting_name = name; -- so we can know which setting this maps to
@@ -192,9 +225,10 @@ function SassAddon.PanelControl(type, name, parent)
     current_value = false;
     if selected_radio == name then
       current_value = true;
-      parent.sass_controls.RAID_ICON = name;
     end
 
+    cb.control_type = type;
+    parent.sass_controls[name] = cb;
 		cb:SetChecked(current_value);
 		cb.setting_name = name; -- so we can know which setting this maps to
 	end -- CheckButton
@@ -220,12 +254,16 @@ function SassAddon.PanelControl(type, name, parent)
       txt.y +4 --offset y
     );
     ebx:SetAutoFocus(false);
+    ebx:HookScript("OnTextChanged", SassAddon.EditBoxChanged);
+    ebx:HookScript("OnEnterPressed", function(self) self:ClearFocus(); end);
+    ebx:HookScript("OnEscapePressed", function(self) self:ClearFocus(); end);
 
     --eb: HookScript("OnClick", SimpleAssist_Checkbox_OnClick);
 
     local current_value = SassAddon.unsaved_settings[name];
     SassAddon.unsaved_settings[name] = current_value;
-    parent.sass_controls[name] = current_value;
+    ebx.control_type = type;
+    parent.sass_controls[name] = ebx;
     ebx:SetText(current_value);
     ebx:SetCursorPosition(0)
     ebx.setting_name = name; -- so we can know which setting this maps to
@@ -285,7 +323,7 @@ function SassAddon.CheckboxClick(ef, ...)
     -- skip the "SASS_CONTROL_"
     local button_name = ef.setting_name;
     local state = ef:GetChecked();
-    SassAddon.unsaved_settings[button_name] = state;
+    SassAddon.SaveSetting(button_name, state);
   --  DEFAULT_CHAT_FRAME:AddMessage('checkbox ' .. button_name .. ': ' .. tostring(state),  1, 1.0, 0.5, 1);
 
 
@@ -304,10 +342,15 @@ function SassAddon.RadioOnClick(ef)
 
   if nil ~= ef then
     local button_name = ef.setting_name;
-    local state = ef:GetChecked();
-    SassAddon.unsaved_settings.selected_radio = button_name;
+    SassAddon.SaveSetting("RAID_ICON", button_name);
     -- DEFAULT_CHAT_FRAME:AddMessage('checkbox ' .. button_name .. ': ' .. tostring(state),  1, 1.0, 0.5, 1);
 	  SassAddon.UpdateRadios();
+  end
+end
+
+function SassAddon.EditBoxChanged(ef, userInput)
+  if nil ~= ef and userInput then
+    SassAddon.SaveSetting(ef.setting_name, ef:GetText());
   end
 end
 
@@ -315,14 +358,14 @@ end
 
 
 function SassAddon.UpdateRadios()
-  i=0;
+  local i = 0;
 	while (i<9) do
 
     local o_radio = _G["SASS_CONTROL_" .. "RTARGET" .. i];
-		if "RTARGET" .. i == SassAddon.unsaved_settings.selected_radio then
+    if o_radio and "RTARGET" .. i == SassAddon.unsaved_settings.RAID_ICON then
 
   		o_radio:SetChecked(true);
-		else
+    elseif o_radio then
 			o_radio:SetChecked(false);
 		end
 		i=i+1;
