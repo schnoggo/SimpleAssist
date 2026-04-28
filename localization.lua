@@ -1,7 +1,19 @@
+local function SimpleAssist_GetMetadata(key)
+	if C_AddOns and C_AddOns.GetAddOnMetadata then
+		return C_AddOns.GetAddOnMetadata("SimpleAssist", key);
+	end
+
+	if GetAddOnMetadata then
+		return GetAddOnMetadata("SimpleAssist", key);
+	end
+
+	return "";
+end
+
 SASSTEXT = {
 
-	TITLE="Schnoggo's Simple Assist Ver. " .. GetAddOnMetadata("SimpleAssist", "Version"),
-	WELCOME="SimpleAssist " .. GetAddOnMetadata("SimpleAssist", "Version") .. " Loaded. Type /sass to change settings.",
+	TITLE="Schnoggo's Simple Assist Ver. " .. SimpleAssist_GetMetadata("Version"),
+	WELCOME="SimpleAssist " .. SimpleAssist_GetMetadata("Version") .. " Loaded. Type /sass to change settings.",
 	FIRST_RUN="First time running SimpleAssist on this character. Customize with Interface:Addons:SimpleAssist.",
 	TITLESPACING=-12, -- vertical distance between each TITLE below:
 	LINESPACING=-8,
