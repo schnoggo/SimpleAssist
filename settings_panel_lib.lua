@@ -24,7 +24,7 @@ end
 
 ---
 -- Set the panel title and actions
--- Register with WoW InterfaceOptions
+-- Register with the modern WoW Settings API
 --
 -- @param frame reference
 -- @tparam text for name of panel
@@ -49,20 +49,13 @@ function SassAddon.RegisterInterfacePanel(frame, panel_title)
   --    SassAddon.panel.cancel = SassAddon.LoadDefaults;
 frame.sass_controls = {}; -- list of controls and their values
 
-  if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
-    local category = Settings.RegisterCanvasLayoutCategory(frame, panel_title);
-    Settings.RegisterAddOnCategory(category);
-    if Settings.SetKeybindingsCategory then
-      Settings.SetKeybindingsCategory(category);
-    end
-    frame.category = category;
-    return category;
+  local category = Settings.RegisterCanvasLayoutCategory(frame, panel_title);
+  Settings.RegisterAddOnCategory(category);
+  if Settings.SetKeybindingsCategory then
+    Settings.SetKeybindingsCategory(category);
   end
-
-  -- Add the panel to the Interface Options
-  InterfaceOptions_AddCategory(frame);
-
-  return frame;
+  frame.category = category;
+  return category;
 
 end
 
@@ -75,13 +68,8 @@ function SassAddon.RegisterInterfaceSubPanel(frame, panel_title, parent_category
     SassAddon.RefreshPanelControls(self);
   end);
 
-  if Settings and Settings.RegisterCanvasLayoutSubcategory and parent_category then
-    frame.category = Settings.RegisterCanvasLayoutSubcategory(parent_category, frame, panel_title);
-    return frame.category;
-  end
-
-  InterfaceOptions_AddCategory(frame);
-  return frame;
+  frame.category = Settings.RegisterCanvasLayoutSubcategory(parent_category, frame, panel_title);
+  return frame.category;
 
 end
 
