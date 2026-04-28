@@ -120,10 +120,23 @@ function SassAddon.init(event, addon)
 
 			local f = CreateFrame("Button", "SimpleAssistActionButton", UIParent, "SecureActionButtonTemplate");
 
-			f:SetSize(1, 1);
+			f:SetSize(44, 44);
+			f:SetPoint("CENTER", UIParent, "CENTER", 0, -180);
 			f:RegisterForClicks("AnyUp", "AnyDown");
 			f:SetAttribute("useOnKeyDown", false);
-			f:Hide();
+			f:SetNormalTexture("Interface\\Buttons\\UI-Quickslot2");
+			f:SetPushedTexture("Interface\\Buttons\\UI-Quickslot-Depress");
+			f:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square");
+			f:Show();
+
+			f.icon = f:CreateTexture(nil, "ARTWORK");
+			f.icon:SetTexture("Interface\\Icons\\Ability_Hunter_MasterMarksman");
+			f.icon:SetSize(30, 30);
+			f.icon:SetPoint("CENTER");
+
+			f.label = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
+			f.label:SetPoint("BOTTOM", f, "TOP", 0, 2);
+			f.label:SetText("SimpleAssist");
 			SimpleAssist_SetAssistButtonTarget(nil);
 
 
