@@ -3,15 +3,15 @@ Name: SimpleAssist
 -->
 <Bindings>
 
-<Binding name="Set Player to Assist"  header="SimpleAssist:">
+<Binding name="SASS_LEARN"  header="SASS_TITLE">
 SimpleAssist_LearnAssist("target");
 </Binding>
 
-<Binding name="Assist Learned Player">
+<Binding name="SASS_ASSIST">
 SimpleAssist_DoAssist();
 </Binding>
 
-<Binding name="Request Assistance" >
+<Binding name="SASS_ASK" >
 SimpleAssist_AskAssist();
 </Binding>
 

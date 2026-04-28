@@ -175,6 +175,11 @@ end
 		eventHandled = true;
 	end
 
+	if (eventHandled == false and event == "PLAYER_ENTERING_WORLD") then
+		SimpleAssist_UpdateBindings();
+		eventHandled = true;
+	end
+
 
 	if (eventHandled == false and ((event == "PLAYER_LEAVE_COMBAT") or (event == "PLAYER_REGEN_ENABLED"))) then
 		if (SassAddon.pending_learn ~= nil) then -- we have a "learn" pending from combat
@@ -206,7 +211,7 @@ end -- end of function
 function SimpleAssist_UpdateBindings()
  if nil ~= SimpleAssistActionButton then
 			ClearOverrideBindings(SassAddon.eventframe);
-			local key1, key2 = GetBindingKey("Assist Learned Player");
+			local key1, key2 = GetBindingKey("SASS_ASSIST");
 				if (key1) then -- SetOverrideBindingClick(owner, isPriority, "KEY", "ButtoName"[,"mouseButton"]);
 					SetOverrideBindingClick(
 						SassAddon.eventframe, -- owner frame
@@ -349,6 +354,7 @@ function  SimpleAssist_AskAssist()
 			end -- party
 
 		else -- not in a group, so only yell, say or emote
+			local icon_number = tonumber(strsub(SimpleAssistCharVars.RAID_ICON, -1)) or 0;
 			if (SimpleAssistCharVars.CHAT_YELL) then
 				SendChatMessage(msg, "YELL");
 			end
@@ -360,7 +366,7 @@ function  SimpleAssist_AskAssist()
 				DoEmote("ATTACKMYTARGET");
 			end
 
-			if (SimpleAssistCharVars.RAID_ICON ~= 0) then
+			if (icon_number ~= 0) then
 				SetRaidTarget("target",icon_number);
 			end
 
