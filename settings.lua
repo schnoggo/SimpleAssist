@@ -180,7 +180,8 @@ function SimpleAssist_GetPrefsText()
 	SimpleAssistSavedVars["CustomChat"]={};
 	for i = 1,3 do
 		local tMsgName="SimpleAssistChatText"..i;
-		local tMsgText=getglobal(tMsgName):GetText();
+    local textFrame = _G[tMsgName];
+    local tMsgText = textFrame and textFrame:GetText() or nil;
 		if (tMsgText ~= nil) then
 			SimpleAssistSavedVars["CustomChat"][i]=tMsgText;
 		end
