@@ -37,6 +37,19 @@ local function SimpleAssist_SetAssistButtonTarget(targetName)
 	end
 end
 
+local function SimpleAssist_EnsureAlertFrame()
+	if (SimpleAssistAlertFrame) then
+		return;
+	end
+
+	local f = CreateFrame("MessageFrame", "SimpleAssistAlertFrame", UIParent);
+	f:SetSize(520, 60);
+	f:SetPoint("CENTER", UIParent, "CENTER", 0, 0);
+	f:SetFrameStrata("LOW");
+	f:SetInsertMode("TOP");
+	f:SetFontObject(NumberFontNormalHuge);
+end
+
 
 -- boot frame:
 local boot_frame = CreateFrame("Frame")
@@ -127,6 +140,7 @@ function SassAddon.init(event, addon)
 			f:SetAttribute("useOnKeyDown", false);
 			f:Show();
 			SimpleAssist_SetAssistButtonTarget(nil);
+			SimpleAssist_EnsureAlertFrame();
 
 
 			-- and register our basic events:
@@ -391,7 +405,12 @@ function SimpleAssist_PopMsg(msg)
     if (SchnoggoAlertInform) then
     	SchnoggoAlertInform(msg);
     else
-		SimpleAssistAlertFrame:AddMessage(msg, 1, 1, 1, 1, 3);
+		SimpleAssist_EnsureAlertFrame();
+		if (SimpleAssistAlertFrame) then
+			SimpleAssistAlertFrame:AddMessage(msg, 1, 1, 1, 1, 3);
+		elseif (DEFAULT_CHAT_FRAME) then
+			DEFAULT_CHAT_FRAME:AddMessage(msg, 1, 1, 1, 1);
+		end
     end
 end
 
