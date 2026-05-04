@@ -48,6 +48,7 @@ local function SimpleAssist_EnsureAlertFrame()
 	f:SetFrameStrata("LOW");
 	f:SetInsertMode("TOP");
 	f:SetFontObject(NumberFontNormalHuge);
+	f:SetJustifyH("CENTER");
 end
 
 
